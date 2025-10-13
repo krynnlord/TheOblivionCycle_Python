@@ -32,7 +32,7 @@ if result_title[0] == 1: # Check for Intro
 ### Main Menu ###
 def main():
     while True:
-        os.system('cls')
+        clear_screen()
         filetitle = 'asset/art/title.dat'
         data = ''
         custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
@@ -65,7 +65,7 @@ def main():
     ### EXIT CODE ###
     #close DB
     con.close()
-    os.system('cls')
+    clear_screen()
     delay_print2("\nThank you for playing The Oblivion Cycle.\n")
     
 if __name__ == "__main__":

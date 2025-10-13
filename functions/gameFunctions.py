@@ -1,11 +1,15 @@
 # Game Metadata
-GameDescInfo = { 
+GameDescInfo = {
 'GameTitle' : 'The Oblivion Cycle',
 'GameSubtitle' : 'Part I: The Shimmering Gate',
 'GameVersion' : '0.1',
 'Copyright' : 'RLM Productions',
 'Author' : 'Richard Miller'
 }
+
+def clear_screen():
+    import os
+    os.system("cls" if os.name == "nt" else "clear")
 
 def battle_seq():
     import os, random
@@ -60,7 +64,7 @@ def battle_seq():
 
     while True:
 
-        os.system('cls')
+        clear_screen()
 
         # Hero Display
         table = Table(title='Player', title_justify='left', style='green')
@@ -241,7 +245,7 @@ def adventuremenu():
     
     
     while True:
-        os.system('cls')
+        clear_screen()
         ans = ''
         filetitle = 'asset/art/village.dat'
         data = ''
@@ -289,7 +293,7 @@ def blacksmith(hero):
     from functions.variables import ColorStyle
     
     while True:
-        os.system('cls')
+        clear_screen()
         ans = ''
         filetitle = 'asset/art/blacksmith.dat'
         data = ''
@@ -318,7 +322,7 @@ def castle(hero):
     from rich.console import Console, Theme
     from functions.variables import chain_armor, shortsword
     while True:
-        os.system('cls')
+        clear_screen()
         ans = ''
         filetitle = 'asset/art/castle.dat'
         data = ''
@@ -353,7 +357,7 @@ def createhero():
     import os, cursor, time, sqlite3
     from functions.classes import ColorStyle
     
-    os.system('cls')
+    clear_screen()
     filetitle = 'asset/art/createhero.dat'
     data = ''
     print(f"{ColorStyle.YELLOW}"+loadart(filetitle, data)+f"{ColorStyle.RESET}")
@@ -488,7 +492,7 @@ def inn(hero):
     from rich.console import Console, Theme
     
     while True:
-        os.system('cls')
+        clear_screen()
         ans = ''
         filetitle = 'asset/art/inn.dat'
         data = ''
@@ -518,7 +522,7 @@ def intro():
                  
     cursor.hide() #hides cursor
 
-    os.system('cls')
+    clear_screen()
     time.sleep(2.2) # pause for Dramatic Musical Intro
 
     # Load RLM Productions Logo
@@ -534,7 +538,7 @@ def intro():
     # Main Logo Display
     filetitle = 'asset/art/title.dat'
     data = ''
-    os.system('cls')
+    clear_screen()
     print(f"{ColorStyle.RED}"+loadart(filetitle, data)+f"{ColorStyle.RESET}")
     time.sleep(2)
     delay_print("                          Chapter I: The Shimmering Gate")
@@ -685,7 +689,7 @@ def music():
     from rich.console import Console, Theme
     
     while True:
-        os.system('cls')
+        clear_screen()
         ans = ''
         filetitle = 'asset/art/music.dat'
         data = ''
@@ -821,7 +825,7 @@ def gameoptions():
     from rich.console import Console, Theme
     
     while True:
-        os.system('cls')
+        clear_screen()
         ans = ''
         filetitle = 'asset/art/options.dat'
         data = ''
@@ -920,7 +924,7 @@ def provisioner(hero):
     from rich.console import Console, Theme
     
     while True:
-        os.system('cls')
+        clear_screen()
         ans = ''
         filetitle = 'asset/art/provisions.dat'
         data = ''
@@ -994,7 +998,7 @@ def r_battle_seq():
     # Battle Loop
     while True:
 
-        os.system('cls')
+        clear_screen()
 
         # Hero Display
         console.print("Hero")
@@ -1179,7 +1183,7 @@ def display_score(hero):
     console = Console(theme=custom_theme, highlight=None)
 
     while True:
-        os.system('cls')
+        clear_screen()
         filetitle="asset/art/score.dat"
         data = ''
         console.print("[yellow]"+loadart(filetitle, data)+"[/yellow]\n")
@@ -1267,7 +1271,7 @@ def stones(hero):
     from rich.console import Console, Theme
     
     while True:
-        os.system('cls')
+        clear_screen()
         ans = ''
         filetitle = 'asset/art/circleofstones.dat'
         data = ''
@@ -1295,7 +1299,7 @@ def temple(hero):
     from rich.console import Console, Theme
     
     while True:
-        os.system('cls')
+        clear_screen()
         ans = ''
         filetitle = 'asset/art/temple.dat'
         data = ''
