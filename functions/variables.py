@@ -76,14 +76,5 @@ plate_armor = armor("Plate Armor", "Heavy", 3000, 18, "")
 
 hero_armor = tunic
 
-#########################################
-# Monsters ##############################
-#########################################
-zombie = monster("Zombie",22,22,0,0,0,0,1,0,8)
-skeleton = monster("Skeleton",13,13,0,0,0,0,1,0,13)
-giant_bat = monster("Giant Bat",22,22,0,0,0,0,1,0,13)
-giant_boar = monster("Giant Boar",42,42,0,0,0,0,1,0,12)
-
-
 # Create Final Hero
 hero = [hero_player, hero_armor, hero_weapon, hero_items, hero_spells]

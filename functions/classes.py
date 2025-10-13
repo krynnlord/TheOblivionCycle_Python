@@ -16,7 +16,7 @@ class player:
 
 # Monster Class
 class monster:
-    def __init__(self, name, hp, hp_max, luck, DEF_m, DEF_s, DEF_b, level, mod, ac):
+    def __init__(self, name, hp, hp_max, luck, DEF_m, DEF_s, DEF_b, level, mod, ac, stat):
         self.name = name
         self.hp = hp
         self.hp_max = hp_max
@@ -27,7 +27,8 @@ class monster:
         self.level = level
         self.mod = mod
         self.ac = ac
-
+        self.stat = stat
+        
 # Spells Class
 class spell:
     def __init__(self, name, desc, qty, ready, modifier, circle, levelreq):

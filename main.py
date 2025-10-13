@@ -57,10 +57,6 @@ def main():
             gameoptions()
         elif ans == '4':
             break
-        elif ans == 'b': # Test out new battle simulation
-            battle_seq()
-        elif ans == 'B': # Test out retro battle simulation
-            r_battle_seq()
 
     ### EXIT CODE ###
     #close DB

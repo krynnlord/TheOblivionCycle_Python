@@ -16,6 +16,6 @@ cur = con.cursor()
 
 
 # # Update Value
-# result=cur.execute("update options set value = 1 where id = 1")
+# result=cur.execute("update hero set hp_max = 100")
 # con.commit()
 # con.close()
