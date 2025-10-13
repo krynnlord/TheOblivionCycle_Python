@@ -12,18 +12,13 @@ def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
 def battle_seq(hero):
-    import random
+    import random, cursor
     from rich.console import Console, Theme
     from rich.table import Table
     from functions.classes import monster
     
     custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
     console = Console(theme=custom_theme, highlight=None)
-
-    # Temp Define Hero
-    #hero.level = 3
-    #hero.hp = 200
-    #hero.hp_max = hero.hp  
 
     # Hero Equiped
     equipment = {'weapon' : '', 'armor' :'' }
@@ -123,7 +118,7 @@ def battle_seq(hero):
         if hitmiss_e == 3:
             play_sound('asset/sounds/crit.wav') 
         
-        # Print the combat strings    
+        # Print the combat strings
         hero_combat_string = ("[green]"+hero.name+'[/green]: ' + hero_combat_string+'\n')          
         enemy_combat_string = ("[red]"+ enemy_current.name+'[/red]: '+enemy_combat_string)
         
@@ -134,10 +129,11 @@ def battle_seq(hero):
         if endcombat == True:
             #console.print('\n')
             console.print("ACTIONS", style="bold underline")        
-            console.print("1) :door: Exit Combat")
-            ans = input('\nCommand > ')
-            # l.play_music("asset/music/11.mp3",.5)
+            console.print("Press any key to Exit Combat")
+            cursor.hide()
+            choice_getch()
             break
+                
         else:
             #console.print('\n')
             console.print("ACTIONS", style="bold underline red")
@@ -147,8 +143,10 @@ def battle_seq(hero):
             console.print("4) :runner: Run")
 
 
-        ans = input('\nCommand > ')
-        if ans == '1' or ' ':
+        cursor.hide()
+        ans = choice_getch()
+        
+        if ans == '1':
 
             # Hero Turn
             atk_value = random.randrange(0,20)
@@ -196,23 +194,33 @@ def battle_seq(hero):
                         enemy_combat_string = "Dead."
                     else:
                         enemy_combat_string = "misses " + hero.name +"."
-
+        
         if ans == '2':
             spellbook()
-            hitmiss = 4
+            hero_combat_string = 'Read Spellbook'
+            enemy_combat_string = 'Waits'
         if ans == '3':
             inventory()
-            hitmiss = 4
+            hero_combat_string = 'Looked at Inventory'
+            enemy_combat_string = 'Waits'
         if ans == '4':
             endcombat = True
             hitmiss = 4
-
+            hero_combat_string = 'Fled'
+            enemy_combat_string = ''
+        if ans not in ('1', '2', '3', '4'):
+            hero_combat_string = 'Invalid Move'
+            enemy_combat_string = 'Waits'
+            
 def adventuremenu():
     from functions.classes import player
+    from functions.variables import dagger
     import cursor, sqlite3
     from rich.console import Console, Theme    
-
-    hero = player('','','','','','','','','','','','')
+  
+    hero = player
+    hero_weapon = dagger
+    
     con = sqlite3.connect('data.db')
     cur = con.cursor()
     result = cur.execute("select name,hp,hp_max,luck,DEF_m,DEF_s,DEF_b,level,mod,exp,stat,gold from hero").fetchone()
@@ -229,7 +237,6 @@ def adventuremenu():
     hero.stat = result[10]
     hero.gold = result[11]
     con.close()
-    
     
     while True:
         clear_screen()
@@ -381,7 +388,7 @@ def createhero():
         cur = con.cursor()
 
         # Write to DB - HERO
-        cur.execute("update hero set name='" + shortname + "',hp=10,hp_max=10,luck=5,DEF_m=0,DEF_s=0,DEF_b=0,level=1,mod=0,exp=0,stat=1,gold=0")
+        cur.execute("update hero set name='" + shortname + "',hp=100,hp_max=100,luck=5,DEF_m=0,DEF_s=0,DEF_b=0,level=1,mod=0,exp=0,stat=1,gold=0")
         con.commit()
         con.close()
         print('\nNew game created....')
@@ -478,9 +485,8 @@ def hero_status_bar(hero):
     
     for i in range(90):
         console.print ("-", end="")
-    console.print("\n[green]"+hero.name + "[white]   Level: " + str(hero.level) + "   Exp: " + str(hero.exp)+"[/white]", end="   ")
-    
-    console.print("Gold: " + str(hero.gold))
+    console.print("\n[green]"+hero.name + "[white]   Level: " + str(hero.level) + "   Exp: " + str(hero.exp)+"   Gold: " + str(hero.gold) +"[/white]")
+    console.print("HP: "+ str(hero.hp) + " / " + str(hero.hp_max))
     for i in range(90):
         console.print ("-", end="")
     console.print("\n")
@@ -552,7 +558,7 @@ def intro():
     time.sleep(4)
 
 def inventory():
-    import os, copy
+    import os, copy, cursor
     from rich.console import Console, Theme
     from rich.table import Table
     
@@ -613,8 +619,8 @@ def inventory():
     table.add_column("Qty", style="yellow", width=5)
     table.add_row("Gold",str(hero_gold))
     console.print(table)
-    console.print('\n')
-    console.input('Press any key to return...')
+    cursor.hide()
+    choice_getch()
   
 def checklevelup(level, prof, exp):
 	 
@@ -943,7 +949,7 @@ def display_score(hero):
         break
     
 def spellbook():
-    import os
+    import os, cursor
     from rich.console import Console, Theme
     from rich.table import Table
     
@@ -982,7 +988,8 @@ def spellbook():
     table.add_row(st, tt)
     console.print(table)
 
-    console.input('Press any key to return...')
+    cursor.hide()
+    choice_getch()
     
 def spellcast(hero_spells):
     from rich.console import Console, Theme
