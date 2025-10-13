@@ -1,7 +1,7 @@
 # The Oblivion Cycle - Chapter I: The Shimmering Gate
 # (C)opyright 2024 RLM Productions
 
-import sqlite3, os
+import sqlite3, os, cursor
 from rich.console import Console
 from rich.theme import Theme
 from functions.variables import *
@@ -20,12 +20,9 @@ result_title = cur.execute("select value from options where id = 2").fetchone() 
 
 if result_music[0] == 1: # Check for Music
     music_selected = f'{result_musictrack[0]:02d}' # Convert to 2 digits if 1
-    musictrack = 'asset/music/'+str(music_selected)+'.ogg'
-    if music_selected == '11' or music_selected == '12':
-        play_music(musictrack, .3) # play tracks 11 and 12 softer
-    else:
-        play_music(musictrack) # play Music 
-
+    musictrack = 'asset/music/'+str(music_selected)+'.mp3'
+    play_music(musictrack)
+    
 if result_title[0] == 1: # Check for Intro
     intro()
 
@@ -46,7 +43,9 @@ def main():
         console.print("([red]2[/red]) New Game")
         console.print("([red]3[/red]) Game Options")
         console.print("([red]4[/red]) Quit Game")
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+        
+        cursor.hide()
+        ans = choice_getch()
 
         # Run Choices
         if ans == '2':

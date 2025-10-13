@@ -44,7 +44,7 @@ def battle_seq(hero):
     # Set Sounds *** 0-MISS 1-HIT 2-KILL 3-CRIT 4-NONE
     hitmiss = 4
     hitmiss_e = 4
-    # l.play_music("asset/music/11.ogg",.5)
+    # l.play_music("asset/music/11.mp3",.5)
 
     # Battle Loop
 
@@ -136,7 +136,7 @@ def battle_seq(hero):
             console.print("ACTIONS", style="bold underline")        
             console.print("1) :door: Exit Combat")
             ans = input('\nCommand > ')
-            # l.play_music("asset/music/11.ogg",.5)
+            # l.play_music("asset/music/11.mp3",.5)
             break
         else:
             #console.print('\n')
@@ -209,7 +209,7 @@ def battle_seq(hero):
 
 def adventuremenu():
     from functions.classes import player
-    import os, sqlite3
+    import cursor, sqlite3
     from rich.console import Console, Theme    
 
     hero = player('','','','','','','','','','','','')
@@ -254,7 +254,8 @@ def adventuremenu():
         console.print("([red]6[/red]) The Inn")
         console.print("([red]7[/red]) Back to Main Menu")
 
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+        cursor.hide()
+        ans = choice_getch()
 
         # Run Choices
         if ans == '1':
@@ -277,7 +278,7 @@ def adventuremenu():
             battle_seq(hero)
     
 def blacksmith(hero):
-    import os, cursor, time, sqlite3
+    import cursor
     from rich.console import Console, Theme 
     from functions.variables import ColorStyle
     
@@ -300,14 +301,15 @@ def blacksmith(hero):
         console.print("([red]2[/red]) Buy Armor")
         console.print("([red]3[/red]) Back")
 
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+        cursor.hide()
+        ans = choice_getch()
 
         # Run Choices
         if ans == '3':
             break
          
 def castle(hero):
-    import os
+    import cursor
     from rich.console import Console, Theme
     from functions.variables import chain_armor, shortsword
     while True:
@@ -328,7 +330,8 @@ def castle(hero):
         console.print("([red]1[/red]) Speak with King")
         console.print("([red]2[/red]) Back")
 
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+        cursor.hide()
+        ans = choice_getch()
 
         # Run Choices
         if ans == '1':
@@ -367,9 +370,11 @@ def createhero():
     cursor.hide()
     shortname = name[:10]
     delay_print2(f'{ColorStyle.RED}\nWARNING: {ColorStyle.RESET}This will delete your current game progress!')
-    delay_print2("\nAre you sure you want to start over as "+ f'{ColorStyle.YELLOW}'+shortname+f'{ColorStyle.RESET}' +"?")
+    delay_print2("\nAre you sure you want to start over as "+ f'{ColorStyle.YELLOW}'+shortname+f'{ColorStyle.RESET}' +"? (Y/N)")
     cursor.show()
-    ans = input(" (Y/N) ")
+    
+    cursor.hide()
+    ans = choice_getch()
     
     if ans == 'y' or ans == 'Y':
         con = sqlite3.connect('data.db')
@@ -379,12 +384,13 @@ def createhero():
         cur.execute("update hero set name='" + shortname + "',hp=10,hp_max=10,luck=5,DEF_m=0,DEF_s=0,DEF_b=0,level=1,mod=0,exp=0,stat=1,gold=0")
         con.commit()
         con.close()
-        print('New game started....')
+        print('\nNew game created....')
         time.sleep(2)
         return        
     
-    if ans == 'n' or ans == 'N':
+    else:
         return
+    
 
 def diceroller(diceroll):
 	import random
@@ -441,7 +447,7 @@ def damage_calc(luck, mod, weapon_damage):
 	return modifier_value, success_crit 
 
 def gameinfo():
-    import os
+    import os, cursor
     from rich.console import Console, Theme
     
     os.system("cls")
@@ -455,9 +461,12 @@ def gameinfo():
     console.print("[yellow]Copyright:[/yellow] "+GameDescInfo["Copyright"])
     console.print("[yellow]   Author:[/yellow] "+str(GameDescInfo["Author"]))
     console.print("[yellow]  Version:[/yellow] "+str(GameDescInfo["GameVersion"]))
-    console.print("[yellow]    Music:[/yellow] Alkakrab @ https://alkakrab.itch.io/")
+    console.print("[yellow]    Music:[/yellow] Richard Miller")
 
-    console.input('\n[yellow]Press any key to return...[/yellow]')
+    console.print('\n[yellow]Press any key to return...[/yellow]')
+    
+    cursor.hide()
+    choice_getch()
 
 def hero_status_bar(hero):
     
@@ -477,7 +486,7 @@ def hero_status_bar(hero):
     console.print("\n")
     
 def inn(hero):
-    import os
+    import cursor
     from rich.console import Console, Theme
     
     while True:
@@ -499,7 +508,8 @@ def inn(hero):
         console.print("([red]2[/red]) Open Wardrobe")
         console.print("([red]3[/red]) Back")
 
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+        cursor.hide()
+        ans = choice_getch()
 
         # Run Choices
         if ans == '3':
@@ -674,7 +684,7 @@ def loadart(filetitle, data):
         return(data)
     
 def music():
-    import os, sqlite3
+    import cursor, sqlite3
     from rich.console import Console, Theme
     
     while True:
@@ -687,87 +697,65 @@ def music():
         console.print("[cyan]"+loadart(filetitle, data)+"[/cyan]\n\n")
   
         # Print Choices
-        console.print("[yellow]1[/yellow]) Elven Ruins         [yellow]7[/yellow]) The Iron Wall")
-        console.print("[yellow]2[/yellow]) To Oblivion         [yellow]8[/yellow]) Lullaby")
-        console.print("[yellow]3[/yellow]) Mysterious Portal   [yellow]9[/yellow]) Spiraling Descent")
-        console.print("[yellow]4[/yellow]) Cryptic Walls      [yellow]10[/yellow]) Distant Stars")
-        console.print("[yellow]5[/yellow]) Bard's Story       [yellow]11[/yellow]) Judgement")
-        console.print("[yellow]6[/yellow]) Shimmering Lights  [yellow]12[/yellow]) Ascendancy")
+        console.print("[yellow]1[/yellow]) From Oblivion They Come")
+        console.print("[yellow]2[/yellow]) To The Fallen")
+        console.print("[yellow]3[/yellow]) Silver & Steel")
+        console.print("[yellow]4[/yellow]) Gods & Demons")
+        console.print("[yellow]5[/yellow]) The Ritual")
+        console.print("[yellow]6[/yellow]) A Gate Manifests")
+        console.print("[yellow]7[/yellow]) Ethereal Dreams")
         console.print("\n[yellow]0[/yellow]) Back")
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+
+        cursor.hide()
+        ans = choice_getch()
 
         con = sqlite3.connect('data.db')
         cur = con.cursor()
 
 
         if ans == '1':
-            play_music("asset/music/01.ogg")
+            play_music("asset/music/01.mp3")
             cur.execute("update options set value = 1 where id = 3")
             con.commit()
         if ans == '2':
-            play_music("asset/music/02.ogg")
+            play_music("asset/music/02.mp3")
             cur.execute("update options set value = 2 where id = 3")
             con.commit()
         if ans == '3':
-            play_music("asset/music/03.ogg")
+            play_music("asset/music/03.mp3")
             cur.execute("update options set value = 3 where id = 3")
             con.commit()
         if ans == '4':
-            play_music("asset/music/04.ogg")
+            play_music("asset/music/04.mp3")
             cur.execute("update options set value = 4 where id = 3")
             con.commit()
         if ans == '5':
-            play_music("asset/music/05.ogg")
+            play_music("asset/music/05.mp3")
             cur.execute("update options set value = 5 where id = 3")
             con.commit()            
         if ans == '6':
-            play_music("asset/music/06.ogg")
+            play_music("asset/music/06.mp3")
             cur.execute("update options set value = 6 where id = 3")
             con.commit()
         if ans == '7':
-            play_music("asset/music/07.ogg")
+            play_music("asset/music/07.mp3")
             cur.execute("update options set value = 7 where id = 3")
             con.commit()
-        if ans == '8':
-            play_music("asset/music/08.ogg")
-            cur.execute("update options set value = 8 where id = 3")
-            con.commit()
-        if ans == '9':
-            play_music("asset/music/09.ogg")
-            cur.execute("update options set value = 9 where id = 3")
-            con.commit()
-        if ans == '10':
-            play_music("asset/music/10.ogg")
-            cur.execute("update options set value = 10 where id = 3")
-            con.commit()
-        if ans == '11':
-            play_music("asset/music/11.ogg", .3)
-            cur.execute("update options set value = 11 where id = 3")
-            con.commit()
-        if ans == '12':
-            play_music("asset/music/12.ogg", .3)
-            cur.execute("update options set value = 12 where id = 3")
-            con.commit()            
-
+        
         if ans == '0':
             return
         
-def play_music(mp3File,vol=.5):
+def play_music(mp3File,vol=.1):
     import pygame
     
     pygame.mixer.init()
-    sound = pygame.mixer.Sound(mp3File)
-    channel = pygame.mixer.Channel(0)
-    channel.play(sound, -1)
-    channel.set_volume(vol)
+    pygame.mixer.music.load(mp3File)
+    pygame.mixer.music.set_volume(vol)
+    pygame.mixer.music.play(-1)
 
 def music_toggle():
     import pygame
-    
-    if pygame.mixer.Channel(0).get_busy():
-        pygame.mixer.Channel(0).pause()
-    else:
-        pygame.mixer.Channel(0).unpause()
+    pygame.mixer.music.stop()
 
 def play_midi(midifile,vol):
     import pygame
@@ -789,7 +777,7 @@ def music_lower():
     import pygame
     
     current_volume = pygame.mixer.music.get_volume()
-    new_volume = current_volume - .1
+    new_volume = max(0.0, current_volume - 0.1)
     pygame.mixer.music.set_volume(new_volume)
     
 def music_raise():
@@ -810,7 +798,7 @@ def play_sound(mp3File):
 
 def gameoptions():
     
-    import os, sqlite3
+    import cursor, sqlite3
     from rich.console import Console, Theme
     
     while True:
@@ -827,9 +815,7 @@ def gameoptions():
         cur = con.cursor()
         result_music = cur.execute("select value from options where id = 1").fetchone() 
         result_title = cur.execute("select value from options where id = 2").fetchone()
-        result_battle = cur.execute("select value from options where id = 4").fetchone() 
         
-
         # Print Choices
         if result_title[0] == 0:
             console.print("([red]1[/red]) Show Intro (Currently: [red]Off[/red])")
@@ -837,19 +823,17 @@ def gameoptions():
             console.print("([red]1[/red]) Show Intro (Currently: [green]On[/green])")
 
         if result_music[0] == 1:            
-            console.print("([red]2[/red]) Play Music (Currently: [green]On[/green])")
+            console.print("([red]2[/red]) Play Music (Currently: [green]On[/green])",end="")
         else:    
-            console.print("([red]2[/red]) Play Music (Currently: [red]Off[/red])")
+            console.print("([red]2[/red]) Play Music (Currently: [red]Off[/red])" ,end="")
         
-        if result_battle[0] == 1:            
-            console.print("([red]3[/red]) Modern Battle System (Currently: [green]On[/green])")
-        else:    
-            console.print("([red]3[/red]) Modern Battle System (Currently: [red]Off[/red])")
-        console.print("([red]4[/red]) Game Information")
-        console.print("([red]5[/red]) Music Player")
-        console.print("([red]6[/red]) Return")
+        console.print("   ([red]- / +[/red]) Lower / Raise Volume")
+        console.print("([red]3[/red]) Game Information")
+        console.print("([red]4[/red]) Music Player")
+        console.print("([red]5[/red]) Return")
 
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+        cursor.hide()
+        ans = choice_getch()
 
         # Run Choices
         if ans == '1': # Toggle Intro Logic
@@ -871,26 +855,21 @@ def gameoptions():
                 con.commit()
                 result_musictrack = cur.execute("select value from options where id = 3").fetchone()
                 music_selected = f'{result_musictrack[0]:02d}' # Convert to 2 digits if 1
-                musictrack = 'asset/music/'+str(music_selected)+'.ogg'
-                play_music(musictrack)
+                musictrack = 'asset/music/'+str(music_selected)+'.mp3'
+                play_music(musictrack)            
         
-        elif ans == '3': # Toggle Battle Version
-            
-            if result_battle[0] == 1:
-                cur.execute("update options set value = 0 where id = 4")
-                con.commit()
-            else:
-                cur.execute("update options set value = 1 where id = 4")
-                con.commit()                
-        
-        elif ans == '4':
+        elif ans == '3':
             gameinfo()
         
-        elif ans == '5':
+        elif ans == '4':
             music()
         
-        elif ans == '6':
+        elif ans == '5':
             break
+        elif ans == '-':
+            music_lower()
+        elif ans == '+' or ans == '=':
+            music_raise()    
     
 def delay_print(s):
     import sys, time
@@ -909,7 +888,7 @@ def delay_print2(s):
         time.sleep(0.02)
         
 def provisioner(hero):
-    import os
+    import cursor
     from rich.console import Console, Theme
     
     while True:
@@ -931,7 +910,8 @@ def provisioner(hero):
         console.print("([red]2[/red]) Sell Items")
         console.print("([red]3[/red]) Back")
 
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+        cursor.hide()
+        ans = choice_getch()
 
         # Run Choices
         if ans == '3':
@@ -1029,7 +1009,7 @@ def spellcast(hero_spells):
         console.input("That is not a valid spell.")   
         
 def stones(hero):
-    import os
+    import cursor
     from rich.console import Console, Theme
     
     while True:
@@ -1050,14 +1030,15 @@ def stones(hero):
         console.print("([red]1[/red]) Embark on quest")
         console.print("([red]2[/red]) Back")
 
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+        cursor.hide()
+        ans = choice_getch()
 
         # Run Choices
         if ans == '2':
             break
         
 def temple(hero):
-    import os
+    import cursor
     from rich.console import Console, Theme
     
     while True:
@@ -1079,7 +1060,8 @@ def temple(hero):
         console.print("([red]2[/red]) Memorize Spells")
         console.print("([red]3[/red]) Back")
 
-        ans = console.input("\n[yellow]Selection> [/yellow]")
+        cursor.hide()
+        ans = choice_getch()
 
         # Run Choices
         if ans == '3':
@@ -1119,4 +1101,23 @@ def enemy_generator(hero_level):
     
     return enemy_current
 
-        
+def choice_getch():
+    import sys
+    if sys.platform.startswith('win'):
+        try:
+            import msvcrt
+            return msvcrt.getch().decode('utf-8')
+        except:
+            return
+    else:
+        import tty
+        import termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(fd)
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+    
