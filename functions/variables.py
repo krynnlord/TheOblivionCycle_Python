@@ -21,8 +21,6 @@ holy_ground = spell("Holy Ground", "Heals for a small amount", 0, 0, 15, 3, 10)
 double = spell("Double", "Heals for a small amount", 0, 0, 15, 3, 11)
 immolation = spell("Immolation", "Heals for a small amount", 0, 0, 15, 3, 12)
 
-hero_spells = [heal, cure, create_food, magic_missle, greater_heal, barrier, escape, fireball, regeneration, holy_ground, double, immolation]
-
 #########################################
 # Weapons ###############################
 #########################################
@@ -39,6 +37,7 @@ greatsword = weapon(11, "Greatsword", "slashing", 800, 18, "A massive two-handed
 club = weapon(12, "Club", "blunt", 50, 4, "A simple wooden club", 0)
 mace = weapon(13, "Mace", "blunt", 250, 9, "A heavy iron mace", 0)
 warhammer = weapon(14, "Warhammer", "blunt", 600, 15, "A large two-handed hammer", 0)
+
 #########################################
 # Armor #################################
 #########################################
@@ -55,5 +54,3 @@ scale_mail = armor(5, "Scale Mail", "Medium", 800, 10, "Armor made of overlappin
 
 # Heavy Armor
 plate_mail = armor(6, "Plate Mail", "Heavy", 1500, 15, "Full suit of plate armor", 0)
-
-

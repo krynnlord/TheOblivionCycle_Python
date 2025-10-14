@@ -294,7 +294,7 @@ def blacksmith(hero):
             break
          
 def castle(hero):
-    import cursor, sqlite3
+    import cursor
     from rich.console import Console, Theme
     
     while True:
