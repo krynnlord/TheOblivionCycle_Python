@@ -296,7 +296,6 @@ def blacksmith(hero):
 def castle(hero):
     import cursor, sqlite3
     from rich.console import Console, Theme
-    global dagger
     
     while True:
         clear_screen()
@@ -326,12 +325,6 @@ def castle(hero):
                 console.input('\nPress any key to return...')
                 hero[0].level += 1
                 hero[0].exp += 200
-                dagger.have = 1
-                con = sqlite3.connect('data.db')
-                cur = con.cursor()
-                cur.execute("UPDATE inventory SET have = 1 where id = 8")
-                con.commit()
-                con.close()
                 
         if ans == '2':
             break
