@@ -1,3 +1,5 @@
+from functions.variables import *
+
 # Game Metadata
 GameDescInfo = {
 'GameTitle' : 'The Oblivion Cycle',
@@ -20,14 +22,8 @@ def battle_seq(hero):
     custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
     console = Console(theme=custom_theme, highlight=None)
 
-    # Hero Equiped
-    equipment = {'weapon' : '', 'armor' :'' }
-    hero_equip = equipment
-    hero_equip['weapon'] = 'Short Sword'
-    hero_equip['armor'] = 'Cloth Armor'
-
     # Define Enemy 
-    enemy_current = enemy_generator(hero.level)
+    enemy_current = enemy_generator(hero[0].level)
 
     # Battle Strings
     hero_combat_string = "Ready for Combat."
@@ -43,27 +39,26 @@ def battle_seq(hero):
 
     # Battle Loop
 
-
     while True:
 
         clear_screen()
 
         # Hero Display
         table = Table(title='Player', title_justify='left', style='green')
-        hero_table_line = ("Name                   Level: "+ str(hero.level))
+        hero_table_line = ("Name                   Level: "+ str(hero[0].level))
         table.add_column(hero_table_line, width = 35)
-        hero_disp_hp = (str(hero.hp)+'/'+ str(hero.hp_max))
-        hero_line1 = (hero.name)
+        hero_disp_hp = (str(hero[0].hp)+'/'+ str(hero[0].hp_max))
+        hero_line1 = (hero[0].name)
 
         table.add_column("HP: " + hero_disp_hp, width = 25)
 
 
         # print HERO HPbar
         hp_bar = ""
-        if hero.hp == 0:
+        if hero[0].hp == 0:
             bar_ticks = 0
         else:
-            bar_ticks = (hero.hp / hero.hp) * 100 / 4
+            bar_ticks = (hero[0].hp / hero[0].hp) * 100 / 4
         while bar_ticks > 0:
             hp_bar += "[green]█[/green]"
             bar_ticks -= 1
@@ -119,7 +114,7 @@ def battle_seq(hero):
             play_sound('asset/sounds/crit.wav') 
         
         # Print the combat strings
-        hero_combat_string = ("[green]"+hero.name+'[/green]: ' + hero_combat_string+'\n')          
+        hero_combat_string = ("[green]"+hero[0].name+'[/green]: ' + hero_combat_string+'\n')          
         enemy_combat_string = ("[red]"+ enemy_current.name+'[/red]: '+enemy_combat_string)
         
         table.add_row(hero_combat_string+enemy_combat_string)
@@ -137,7 +132,7 @@ def battle_seq(hero):
         else:
             #console.print('\n')
             console.print("ACTIONS", style="bold underline red")
-            console.print("1) :dagger:  Attack with " + hero_equip['weapon'])
+            console.print("1) :dagger:  Attack with " + hero[2].name)
             console.print("2) :sparkler: Spellbook")
             console.print("3) :handbag: Inventory")
             console.print("4) :runner: Run")
@@ -152,9 +147,9 @@ def battle_seq(hero):
             atk_value = random.randrange(0,20)
             modifier_value = 0
             hero_crit = 0
-            luckmod = random.randrange(hero.luck, 20)
+            luckmod = random.randrange(hero[0].luck, 20)
             if luckmod >= 16:
-                modifier_value = round((atk_value*hero.luck) * 1.1)
+                modifier_value = round((atk_value*hero[0].luck) * 1.1)
                 hero_crit = 1
             if hero_crit == 1:
                 enemy_current.hp -= atk_value + modifier_value
@@ -162,16 +157,16 @@ def battle_seq(hero):
                 enemy_current.hp -= atk_value
             if enemy_current.hp <= 0:
                 enemy_current.hp = 0
-                hero_combat_string = "Hits "+enemy_current.name+ " with "+hero_equip['weapon'] +" for " + str(atk_value) +" damage, and kills it!"
+                hero_combat_string = "Hits "+enemy_current.name+ " with "+hero[2].name +" for " + str(atk_value) +" damage, and kills it!"
                 hitmiss = 2
                 endcombat = True
             else:    
                 if atk_value >= 1:
                     if hero_crit == 1:
-                        hero_combat_string = "*CRITICAL* Hits "+enemy_current.name  +" with "+hero_equip['weapon'] +" for " + str(atk_value+ modifier_value) +" damage."
+                        hero_combat_string = "*CRITICAL* Hits "+enemy_current.name  +" with "+hero[2].name +" for " + str(atk_value+ modifier_value) +" damage."
                         hitmiss = 3
                     else:
-                        hero_combat_string = "Hits "+enemy_current.name  +" with "+hero_equip['weapon'] +" for " + str(atk_value) +" damage."
+                        hero_combat_string = "Hits "+enemy_current.name  +" with "+hero[2].name +" for " + str(atk_value) +" damage."
                         hitmiss = 1
                 else:
                     hero_combat_string = "misses "+enemy_current.name  +"."
@@ -179,28 +174,28 @@ def battle_seq(hero):
             # Enemy Turn
             #print(enemy_current['name']+' attacks you.')
             atk_value = random.randrange(0,15)
-            hero.hp -= atk_value
+            hero[0].hp -= atk_value
             if endcombat == True:
                 atk_value = 0
-            if hero.hp <= 0:
-                hero.hp = 0
+            if hero[0].hp <= 0:
+                hero[0].hp = 0
                 enemy_combat_string = enemy_current.name+" has killed you."
                 endcombat = True
             else:    
                 if atk_value >= 1:
-                    enemy_combat_string = "Hits " + hero.name +" for " + str(atk_value) +" damage."
+                    enemy_combat_string = "Hits " + hero[0].name +" for " + str(atk_value) +" damage."
                 else:
                     if endcombat == True:
                         enemy_combat_string = "Dead."
                     else:
-                        enemy_combat_string = "misses " + hero.name +"."
+                        enemy_combat_string = "misses " + hero[0].name +"."
         
         if ans == '2':
             spellbook()
             hero_combat_string = 'Read Spellbook'
             enemy_combat_string = 'Waits'
-        if ans == '3':
-            inventory()
+        if ans == '3' or ans == 'I' or ans == 'i':
+            inventory(hero)
             hero_combat_string = 'Looked at Inventory'
             enemy_combat_string = 'Waits'
         if ans == '4':
@@ -213,30 +208,10 @@ def battle_seq(hero):
             enemy_combat_string = 'Waits'
             
 def adventuremenu():
-    from functions.classes import player
-    from functions.variables import dagger
-    import cursor, sqlite3
+    import cursor
     from rich.console import Console, Theme    
   
-    hero = player
-    hero_weapon = dagger
-    
-    con = sqlite3.connect('data.db')
-    cur = con.cursor()
-    result = cur.execute("select name,hp,hp_max,luck,DEF_m,DEF_s,DEF_b,level,mod,exp,stat,gold from hero").fetchone()
-    hero.name = result[0]
-    hero.hp = result[1]
-    hero.hp_max = result[2]
-    hero.luck = result[3]
-    hero.DEF_m = result[4]
-    hero.DEF_s = result[5]
-    hero.DEF_b = result[6]
-    hero.level = result[7]
-    hero.mod = result[8]
-    hero.exp = result[9]
-    hero.stat = result[10]
-    hero.gold = result[11]
-    con.close()
+    hero = load_game()
     
     while True:
         clear_screen()
@@ -278,8 +253,11 @@ def adventuremenu():
         elif ans == '6':
             inn(hero)
         elif ans == 's' or ans == 'S':
-            display_score(hero)    
+            display_score(hero)
+        elif ans == 'i' or ans == 'I':
+            inventory(hero)    
         elif ans == '7':
+            save_game(hero)
             break
         elif ans == 'b': 
             battle_seq(hero)
@@ -318,7 +296,6 @@ def blacksmith(hero):
 def castle(hero):
     import cursor
     from rich.console import Console, Theme
-    from functions.variables import chain_armor, shortsword
     while True:
         clear_screen()
         ans = ''
@@ -342,18 +319,18 @@ def castle(hero):
 
         # Run Choices
         if ans == '1':
-            if hero.level == 1:
-                console.print(f"\nThe King looks at you with disdain.\n\n'You are not yet ready for a quest, {hero.name}. Return when you have proven yourself.'")
+            if hero[0].level == 1:
+                console.print(f"\nThe King looks at you with disdain.\n\n'You are not yet ready for a quest, {hero[0].name}. Return when you have proven yourself.'")
                 console.input('\nPress any key to return...')
-                hero.level += 1
-                hero.exp += 200
+                hero[0].level += 1
+                hero[0].exp += 200
 
 
         if ans == '2':
             break
         
 def createhero():
-    import os, cursor, time, sqlite3
+    import cursor, time, sqlite3
     from functions.classes import ColorStyle
     
     clear_screen()
@@ -485,8 +462,8 @@ def hero_status_bar(hero):
     
     for i in range(90):
         console.print ("-", end="")
-    console.print("\n[green]"+hero.name + "[white]   Level: " + str(hero.level) + "   Exp: " + str(hero.exp)+"   Gold: " + str(hero.gold) +"[/white]")
-    console.print("HP: "+ str(hero.hp) + " / " + str(hero.hp_max))
+    console.print("\n[green]"+hero[0].name + "[white]   Level: " + str(hero[0].level) + "   Exp: " + str(hero[0].exp)+"   Gold: " + str(hero[0].gold) +"[/white]")
+    console.print("HP: "+ str(hero[0].hp) + " / " + str(hero[0].hp_max) + "    Armor: " + hero[1].name + "    Weapon: " + hero[2].name)
     for i in range(90):
         console.print ("-", end="")
     console.print("\n")
@@ -557,7 +534,7 @@ def intro():
     delay_print("In these trying times a hero emerges....")
     time.sleep(4)
 
-def inventory():
+def inventory(hero):
     import os, copy, cursor
     from rich.console import Console, Theme
     from rich.table import Table
@@ -565,28 +542,6 @@ def inventory():
     
     custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
     console = Console(theme=custom_theme, highlight=None)
-
-  # Temp Variables
-    class Item:
-        def __init__(self, name, attack:int, defense:int, desc, qty:int):
-            self.name = name
-            self.attack = attack
-            self.defense = defense
-            self.desc = desc
-            self.qty = qty
-
-    cloth_armor = Item("Cloth Armor", 0, 2, "A robe that covers the wearer but supplies little armor", 1)
-    short_sword = Item("Short Sword",5, 0, "A small sword that deals normal damage", 1)
-
-    real_cloth_armor = copy.deepcopy(cloth_armor)
-
-    hero_inv = [real_cloth_armor,short_sword]
-    hero_equip_armor = cloth_armor
-    hero_equip_weapon = short_sword
-    hero_gold = 2232 
-
-    real_cloth_armor.qty = real_cloth_armor.qty + 5  
-
 
     os.system("cls")
     # Equipped Table
@@ -597,8 +552,8 @@ def inventory():
     table.add_column("Def", style="normal", width=3)
 
     # Equipment Definition
-    table.add_row("Body","[green]"+hero_equip_armor.name+"[/green]",str(hero_equip_armor.attack),str(hero_equip_armor.defense))
-    table.add_row("Weapon","[red]"+hero_equip_weapon.name+"[/red]",str(hero_equip_weapon.attack),str(hero_equip_weapon.defense))
+    table.add_row("Body","[green]"+hero[1].name+"[/green]","-",str(hero[1].armorclass))
+    table.add_row("Weapon","[red]"+hero[2].name+"[/red]",str(hero[2].damage),"-")
     console.print(table)
 
     # Inventory Table
@@ -608,16 +563,16 @@ def inventory():
     table.add_column("Description", style="normal")
 
     a = 1
-    for i in hero_inv:
-        table.add_row("[normal]"+str(a)+') [/normal]'+ i.name,str(i.qty),i.desc)
-        a +=1
+    #for i in hero_inv:
+    #    table.add_row("[normal]"+str(a)+') [/normal]'+ i.name,str(i.qty),i.desc)
+    #    a +=1
     console.print(table)
 
     # Gold Table
     table = Table()
     table.add_column("Currency", style="yellow", width=10)
     table.add_column("Qty", style="yellow", width=5)
-    table.add_row("Gold",str(hero_gold))
+    table.add_row("Gold",str(hero[0].gold))
     console.print(table)
     cursor.hide()
     choice_getch()
@@ -924,7 +879,7 @@ def provisioner(hero):
             break
         
 def display_score(hero):
-    import os
+    import cursor
     from rich.console import Console, Theme
     
     custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
@@ -936,16 +891,17 @@ def display_score(hero):
         data = ''
         console.print("[yellow]"+loadart(filetitle, data)+"[/yellow]\n")
         hero_status_bar(hero)
-        console.print("Luck: " + str(hero.luck),)
+        console.print("Luck: " + str(hero[0].luck),)
         console.print("Status: ", end="")
-        if hero.stat == 1:
+        if hero[0].stat == 1:
             console.print("Normal")
-        elif hero.stat == 0:
+        elif hero[0].stat == 0:
             console.print("Dead")
-        elif hero.stat == 2:
+        elif hero[0].stat == 2:
             console.print("Poisoned")
-        ans = console.input("\n")
 
+        cursor.hide()
+        choice_getch()
         break
     
 def spellbook():
@@ -1127,4 +1083,77 @@ def choice_getch():
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
+
+def save_game(hero):
+    import sqlite3
     
+    # Save data to database file:
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    cur.execute("""
+        UPDATE hero SET 
+            name = ?, 
+            hp = ?, 
+            hp_max = ?, 
+            luck = ?, 
+            DEF_m = ?, 
+            DEF_s = ?, 
+            DEF_b = ?, 
+            level = ?, 
+            mod = ?, 
+            exp = ?, 
+            stat = ?, 
+            gold = ?
+    """, (
+        hero[0].name,
+        hero[0].hp,
+        hero[0].hp_max,
+        hero[0].luck,
+        hero[0].DEF_m,
+        hero[0].DEF_s,
+        hero[0].DEF_b,
+        hero[0].level,
+        hero[0].mod,
+        hero[0].exp,
+        hero[0].stat,
+        hero[0].gold
+    ))
+    
+    # Save equipped armor and weapon
+    cur.execute("UPDATE equipment SET armor = ?, weapon = ?", (hero[1].id, hero[2].id))
+    con.commit()
+    con.close()
+    
+    return
+
+def load_game():
+    import sqlite3
+    
+    # Load data from database file:
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    result = cur.execute("select name,hp,hp_max,luck,DEF_m,DEF_s,DEF_b,level,mod,exp,stat,gold from hero").fetchone()
+    resultplayer = player(*result)
+    result_a = cur.execute("select armor from equipment").fetchone()    
+    result_w = cur.execute("select weapon from equipment").fetchone()
+
+    if result_a[0] == '1': result_armor = tunic
+    if result_a[0] == '2': result_armor = leather_armor
+    if result_a[0] == '3': result_armor = studded_leather
+    if result_a[0] == '4': result_armor = chain_mail
+    if result_a[0] == '5': result_armor = scale_mail
+    if result_a[0] == '6': result_armor = plate_mail
+
+    if result_w[0] == '1': result_weapon = hands
+    if result_w[0] == '2': result_weapon = dagger
+    if result_w[0] == '3': result_weapon = short_sword
+    if result_w[0] == '4': result_weapon = long_sword
+    if result_w[0] == '5': result_weapon = greatsword
+    if result_w[0] == '6': result_weapon = club
+    if result_w[0] == '7': result_weapon = mace
+    if result_w[0] == '8': result_weapon = warhammer
+    
+    hero = [resultplayer, result_armor, result_weapon]
+    con.close()
+    
+    return hero

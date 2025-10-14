@@ -40,12 +40,10 @@ class spell:
         self.circle = circle
         self.levelreq = levelreq
 
-# Item Class
-class item:
-	def __init__(self, name, type,  value, qty, desc):
+# Flask Class
+class flask:
+	def __init__(self, name, qty, desc):
 		self.name = name
-		self.type = type
-		self.value = value
 		self.qty = qty
 		self.desc = desc
 	
@@ -57,7 +55,8 @@ class item:
 
 # Weapons Class 
 class weapon:
-    def __init__(self, name, type, cost, damage, description):
+    def __init__(self, id, name, type,  cost, damage, description):
+        self.id = id
         self.name = name
         self.type = type
         self.cost = cost
@@ -66,7 +65,8 @@ class weapon:
          
 # Armor Class 
 class armor:
-    def __init__(self, name, type, cost, armorclass, description):
+    def __init__(self, id, name, type,  cost, armorclass, description):
+        self.id = id
         self.name = name
         self.type = type
         self.cost = cost
