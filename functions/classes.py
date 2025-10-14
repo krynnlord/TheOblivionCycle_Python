@@ -55,23 +55,25 @@ class flask:
 
 # Weapons Class 
 class weapon:
-    def __init__(self, id, name, type,  cost, damage, description):
+    def __init__(self, id, name, type,  cost, damage, description, have):
         self.id = id
         self.name = name
         self.type = type
         self.cost = cost
         self.damage = damage
         self.description = description
+        self.have = have
          
 # Armor Class 
 class armor:
-    def __init__(self, id, name, type,  cost, armorclass, description):
+    def __init__(self, id, name, type,  cost, armorclass, description, have):
         self.id = id
         self.name = name
         self.type = type
         self.cost = cost
         self.armorclass = armorclass
         self.description = description
+        self.have = have
 
 class ColorStyle():
     RED = "\033[31m"

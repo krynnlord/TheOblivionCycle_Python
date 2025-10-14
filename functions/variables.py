@@ -27,31 +27,33 @@ hero_spells = [heal, cure, create_food, magic_missle, greater_heal, barrier, esc
 # Weapons ###############################
 #########################################
 # No Weapon
-hands = weapon(1, "Hands", "blunt", 0, 1, "Your Hands")
+hands = weapon(7, "Hands", "blunt", 0, 1, "Your Hands", 1)
 
 # Slashing
-dagger = weapon(2, "Dagger", "slashing", 100, 5, "Small blade")
-short_sword = weapon(3, "Short Sword", "slashing", 200, 8, "A basic short sword")
-long_sword = weapon(4, "Long Sword", "slashing", 400, 12, "A sturdy long sword")
-greatsword = weapon(5, "Greatsword", "slashing", 800, 18, "A massive two-handed sword")
+dagger = weapon(8, "Dagger", "slashing", 100, 5, "Small blade", 0)
+short_sword = weapon(9, "Short Sword", "slashing", 200, 8, "A basic short sword", 0)
+long_sword = weapon(10, "Long Sword", "slashing", 400, 12, "A sturdy long sword", 0)
+greatsword = weapon(11, "Greatsword", "slashing", 800, 18, "A massive two-handed sword", 0)
 
 # Blunt
-club = weapon(6, "Club", "blunt", 50, 4, "A simple wooden club")
-mace = weapon(7, "Mace", "blunt", 250, 9, "A heavy iron mace")
-warhammer = weapon(8, "Warhammer", "blunt", 600, 15, "A large two-handed hammer")
+club = weapon(12, "Club", "blunt", 50, 4, "A simple wooden club", 0)
+mace = weapon(13, "Mace", "blunt", 250, 9, "A heavy iron mace", 0)
+warhammer = weapon(14, "Warhammer", "blunt", 600, 15, "A large two-handed hammer", 0)
 #########################################
 # Armor #################################
 #########################################
 # No Armor
-tunic = armor(1, "Tunic", "Light", 0, 1, "Basic Shirt")
+tunic = armor(1, "Tunic", "Light", 0, 1, "Basic Shirt", 1)
 
 # Light Armor
-leather_armor = armor(2, "Leather Armor", "Light", 150, 3, "Basic leather armor")
-studded_leather = armor(3, "Studded Leather", "Light", 300, 5, "Leather armor reinforced with metal studs")
+leather_armor = armor(2, "Leather Armor", "Light", 150, 3, "Basic leather armor", 0)
+studded_leather = armor(3, "Studded Leather", "Light", 300, 5, "Leather armor reinforced with metal studs", 0)
 
 # Medium Armor
-chain_mail = armor(4, "Chain Shirt", "Medium", 500, 7, "A shirt made of interlocking metal rings")
-scale_mail = armor(5, "Scale Mail", "Medium", 800, 10, "Armor made of overlapping metal scales")
+chain_mail = armor(4, "Chain Shirt", "Medium", 500, 7, "A shirt made of interlocking metal rings", 0)
+scale_mail = armor(5, "Scale Mail", "Medium", 800, 10, "Armor made of overlapping metal scales", 0)
 
 # Heavy Armor
-plate_mail = armor(6, "Plate Mail", "Heavy", 1500, 15, "Full suit of plate armor")
+plate_mail = armor(6, "Plate Mail", "Heavy", 1500, 15, "Full suit of plate armor", 0)
+
+

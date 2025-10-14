@@ -294,8 +294,10 @@ def blacksmith(hero):
             break
          
 def castle(hero):
-    import cursor
+    import cursor, sqlite3
     from rich.console import Console, Theme
+    global dagger
+    
     while True:
         clear_screen()
         ans = ''
@@ -324,8 +326,13 @@ def castle(hero):
                 console.input('\nPress any key to return...')
                 hero[0].level += 1
                 hero[0].exp += 200
-
-
+                dagger.have = 1
+                con = sqlite3.connect('data.db')
+                cur = con.cursor()
+                cur.execute("UPDATE inventory SET have = 1 where id = 8")
+                con.commit()
+                con.close()
+                
         if ans == '2':
             break
         
@@ -559,10 +566,10 @@ def inventory(hero):
     # Inventory Table
     table = Table(title="Inventory", title_justify="left")
     table.add_column("Item Name", style="cyan", width=25)
-    table.add_column("Qty", style="normal", width=3)
     table.add_column("Description", style="normal")
 
-    a = 1
+    if hands.have == 1: table.add_row("7. " + hands.name,hands.description)
+    if dagger.have == 1: table.add_row("8. "+ dagger.name,dagger.description)
     #for i in hero_inv:
     #    table.add_row("[normal]"+str(a)+') [/normal]'+ i.name,str(i.qty),i.desc)
     #    a +=1
@@ -1121,6 +1128,7 @@ def save_game(hero):
     
     # Save equipped armor and weapon
     cur.execute("UPDATE equipment SET armor = ?, weapon = ?", (hero[1].id, hero[2].id))
+    
     con.commit()
     con.close()
     
@@ -1144,14 +1152,14 @@ def load_game():
     if result_a[0] == '5': result_armor = scale_mail
     if result_a[0] == '6': result_armor = plate_mail
 
-    if result_w[0] == '1': result_weapon = hands
-    if result_w[0] == '2': result_weapon = dagger
-    if result_w[0] == '3': result_weapon = short_sword
-    if result_w[0] == '4': result_weapon = long_sword
-    if result_w[0] == '5': result_weapon = greatsword
-    if result_w[0] == '6': result_weapon = club
-    if result_w[0] == '7': result_weapon = mace
-    if result_w[0] == '8': result_weapon = warhammer
+    if result_w[0] == '7': result_weapon = hands
+    if result_w[0] == '8': result_weapon = dagger
+    if result_w[0] == '9': result_weapon = short_sword
+    if result_w[0] == '10': result_weapon = long_sword
+    if result_w[0] == '11': result_weapon = greatsword
+    if result_w[0] == '12': result_weapon = club
+    if result_w[0] == '13': result_weapon = mace
+    if result_w[0] == '14': result_weapon = warhammer
     
     hero = [resultplayer, result_armor, result_weapon]
     con.close()
