@@ -10,12 +10,12 @@ cur = con.cursor()
 
 
 # # Insert
-#result=cur.execute("insert into inventory (id, name, type, have) values(7, 'Dagger', 'weapon', 1)")
+#result=cur.execute("insert into inventory (id, name, type, have) values(14, 'warhammer', 'weapon', 0)")
 #con.commit()
 #con.close()
 
 
 # # Update Value
-result=cur.execute("update inventory set id = 8 where name = 'Dagger'")
-con.commit()
-con.close()
+#result=cur.execute("update inventory set id = 8 where name = 'Dagger'")
+#con.commit()
+#con.close()
