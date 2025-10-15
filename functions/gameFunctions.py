@@ -123,10 +123,14 @@ def battle_seq(hero):
         if endcombat == True:
             #console.print('\n')
             console.print("ACTIONS", style="bold underline")        
-            console.print("Press any key to Exit Combat")
+            console.print("Press any key to Exit Combat")       
             cursor.hide()
             choice_getch()
-            break
+            
+            if enemy_current.hp == 0:
+                hero = combat_rewards(hero)
+            
+            return
                 
         else:
             #console.print('\n')
@@ -258,8 +262,6 @@ def adventuremenu():
         elif ans == '7':
             save_game(hero)
             break
-        elif ans == 'b': 
-            battle_seq(hero)
     
 def blacksmith(hero):
     import cursor
@@ -1308,9 +1310,32 @@ def grid_mover(hero):
                         avatar_location = (new_x, new_y)
                     
                     # # Random encounter: 5% chance
-                    # if random.random() < 0.05:
-                    #     battle_seq(hero)
-                    
-        # Outer loop continues with new map
-
+                    if random.random() < 0.05:
+                        battle_seq(hero)
+                        if hero[0].hp == 0:
+                            player_death(hero)    
+                            return 
     return
+
+def player_death(hero):
+    
+    hero[0].hp = hero[0].hp_max
+    
+    if hero[0].exp != 0: ## Lose 15% Experience on death
+        hero[0].exp -= hero[0].exp * .15
+        hero[0].exp = round(hero[0].exp)
+    if hero[0].gold != 0: ## Lose 50% Gold on death
+        hero[0].gold -= hero[0].gold * .50
+        hero[0].gold = round(hero[0].gold)
+        
+    return hero
+
+def combat_rewards(hero):
+    import random
+    
+    rand_exp = random.randrange(2,9)
+    rand_gold = random.randrange(2,9)
+    hero[0].exp += hero[0].level * rand_exp
+    hero[0].gold += hero[0].level * rand_gold
+    
+    return hero
