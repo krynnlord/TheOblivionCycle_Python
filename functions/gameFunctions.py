@@ -1166,50 +1166,105 @@ def load_game():
 def grid_mover(hero):
     import os
     import msvcrt
+    from rich.console import Console, Theme
     import random
 
+
+    custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
+    console = Console(theme=custom_theme, highlight=None)
+    
     width, height = 12, 12
-
+    
+    first_visit = True
+    
     map_batch1 = [map_grid1, map_grid2, map_grid3]
-
+    
     # Start with the first map in the batch
     current_map_index = 0
-    
-    if hero[0].level >= 1 and hero[0].level <=10:
+
+    if hero[0].level >= 1 and hero[0].level <= 10:
         map_grid = map_batch1[current_map_index]
+        level_text = "Level 1"
+        floor_text = "Floor "
     
+    
+    last_move = None  # Track last move direction
+
     while True:
-        # Find the first "E" in the map and set as starting location
-        for row_idx, row in enumerate(map_grid):
-            for col_idx, cell in enumerate(row):
-                if cell == "↓":
-                    avatar_location = (row_idx, col_idx)
-                    break
-                elif cell == "E":
-                    avatar_location = (row_idx, col_idx)
+        # Set avatar_location based on last move
+        if last_move == "down":
+            # Prefer "↑" as starting location when coming from below
+            up_found = False
+            for row_idx, row in enumerate(map_grid):
+                for col_idx, cell in enumerate(row):
+                    if cell == "↑":
+                        avatar_location = (row_idx, col_idx)
+                        up_found = True
+                        break
+                if up_found:
                     break
             else:
-                continue
-            break
-
+                # Fallback to "E" if no "↑" found
+                for row_idx, row in enumerate(map_grid):
+                    for col_idx, cell in enumerate(row):
+                        if cell == "E":
+                            avatar_location = (row_idx, col_idx)
+                            break
+                    else:
+                        continue
+                    break
+ 
+        if last_move == "up":
+            # Prefer "↑" as starting location when coming from below
+            down_found = False
+            for row_idx, row in enumerate(map_grid):
+                for col_idx, cell in enumerate(row):
+                    if cell == "↓":
+                        avatar_location = (row_idx, col_idx)
+                        down_found = True
+                        break
+                if down_found:
+                    break
+            else:
+                # Fallback to "E" if no "↑" found
+                for row_idx, row in enumerate(map_grid):
+                    for col_idx, cell in enumerate(row):
+                        if cell == "E":
+                            avatar_location = (row_idx, col_idx)
+                            break
+                    else:
+                        continue
+                    break
+        if last_move == None:
+            # Always start on the first "E" in the map
+            for row_idx, row in enumerate(map_grid):
+                for col_idx, cell in enumerate(row):
+                    if cell == "E":
+                        avatar_location = (row_idx, col_idx)
+                        break
+                else:
+                    continue
+                break
+                    
         while True:
             os.system('cls')
             # Print the map with avatar
             for row_idx, row in enumerate(map_grid):
                 line = ""
-                for col_idx, cell in enumerate(row):
+                for col_idx, cell in enumerate(row):                    
                     if (row_idx, col_idx) == avatar_location:
-                        line += "@ "
+                        line += "[green]@[/green] "
                     else:
                         line += cell + " "
-                print(line)
+                        
+                console.print(line)
 
-            print("\n")
-            print("---------- LEGEND ------------------")
-            print("| E: Entrance        ^: Next Floor |")
-            print("| @: Hero                          |")
-            print("------------------------------------")
-            print("\nMove with Arrow Keys (← ↑ → ↓)")
+            console.print("\n                    ", level_text, floor_text, current_map_index + 1)
+            console.print("[yellow]LEGEND ------------------------------")
+            console.print("[yellow]|[/yellow] [red]E[/red]: Entrance     [green]@[/green]: Hero           [yellow]|")
+            console.print("[yellow]|[/yellow] [blue]↓[/blue]: Down Floor   [purple]↑[/purple]: Up Floor       [yellow]|")
+            console.print("[yellow]-------------------------------------")
+            console.print("Move with Arrow Keys (← ↑ → ↓)")
             key = msvcrt.getch()
             if key == b'i':
                 inventory(hero)
@@ -1235,17 +1290,20 @@ def grid_mover(hero):
                         # Move to next map in batch (cycle if at end)
                         current_map_index = (current_map_index + 1) % len(map_batch1)
                         map_grid = map_batch1[current_map_index]
+                        first_visit = False
+                        last_move = "up"
                         break  # Break inner loop to restart with new map
                     elif next_cell == "↓":
                         # Move to previous map in batch (cycle if at start)
                         current_map_index = (current_map_index - 1) % len(map_batch1)
                         map_grid = map_batch1[current_map_index]
+                        last_move = "down"
                         break  # Break inner loop to restart with new map
                     elif next_cell != "#":
                         avatar_location = (new_x, new_y)
                         # Random encounter: 5% chance
-                        if random.random() < 0.05:
-                            battle_seq(hero)
+                        # if random.random() < 0.05:
+                        #     battle_seq(hero)
         # Outer loop continues with new map
 
     return
