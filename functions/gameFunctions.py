@@ -1,4 +1,5 @@
 from functions.variables import *
+from functions.maps import *
 
 # Game Metadata
 GameDescInfo = {
@@ -1166,69 +1167,85 @@ def grid_mover(hero):
     import os
     import msvcrt
     import random
-    
+
     width, height = 12, 12
-    # Example map: walls (#), openings (.), avatar (X)
-    map_grid = [
-        list("############"),
-        list("#          #"),
-        list("# ######   #"),
-        list("# #    #   #"),
-        list("# # ## # ###"),
-        list("# # ## #   #"),
-        list("#E#    ### #"),
-        list("#####  #   #"),
-        list("#          #"),
-        list("### ########"),
-        list("#         ^#"),
-        list("############"),
-    ]
-    x, y = 5, 1  # Start inside an opening
-    avatar_location = (x, y)
+
+    map_batch1 = [map_grid1, map_grid2, map_grid3]
+
+    # Start with the first map in the batch
+    current_map_index = 0
+    
+    if hero[0].level >= 1 and hero[0].level <=10:
+        map_grid = map_batch1[current_map_index]
     
     while True:
-        os.system('cls')
-        # Print the map with avatar
+        # Find the first "E" in the map and set as starting location
         for row_idx, row in enumerate(map_grid):
-            line = ""
             for col_idx, cell in enumerate(row):
-                if (row_idx, col_idx) == avatar_location:
-                    line += "@ "
-                else:
-                    line += cell + " "
-            print(line)
-        
-        print("\n")
-        print("---------- LEGEND ------------------")
-        print("| E: Entrance        ^: Next Floor |")
-        print("| @: Hero                          |")
-        print("------------------------------------")
-        print("\nMove with Arrow Keys (← ↑ → ↓)")
-        key = msvcrt.getch()
-        if key == b'i':
-            inventory(hero)
-        if key == b'\xe0':  # Arrow key prefix
-            arrow = msvcrt.getch()
-            x, y = avatar_location
-            new_x, new_y = x, y
-            if arrow == b'M':     # Right arrow
-                new_y = y + 1
-            elif arrow == b'K':   # Left arrow
-                new_y = y - 1
-            elif arrow == b'H':   # Up arrow
-                new_x = x - 1
-            elif arrow == b'P':   # Down arrow
-                new_x = x + 1
-            # Check for wall and boundaries
-            if (0 <= new_x < height and 0 <= new_y < width and 
-                map_grid[new_x][new_y] == "E"):
-                avatar_location = (new_x, new_y)
-                return
-            if (0 <= new_x < height and 0 <= new_y < width and 
-                map_grid[new_x][new_y] != "#"):
-                avatar_location = (new_x, new_y)
-                # Random encounter: 20% chance
-                if random.random() < 0.05:
-                    battle_seq(hero)
+                if cell == "↓":
+                    avatar_location = (row_idx, col_idx)
+                    break
+                elif cell == "E":
+                    avatar_location = (row_idx, col_idx)
+                    break
+            else:
+                continue
+            break
+
+        while True:
+            os.system('cls')
+            # Print the map with avatar
+            for row_idx, row in enumerate(map_grid):
+                line = ""
+                for col_idx, cell in enumerate(row):
+                    if (row_idx, col_idx) == avatar_location:
+                        line += "@ "
+                    else:
+                        line += cell + " "
+                print(line)
+
+            print("\n")
+            print("---------- LEGEND ------------------")
+            print("| E: Entrance        ^: Next Floor |")
+            print("| @: Hero                          |")
+            print("------------------------------------")
+            print("\nMove with Arrow Keys (← ↑ → ↓)")
+            key = msvcrt.getch()
+            if key == b'i':
+                inventory(hero)
+            if key == b'\xe0':  # Arrow key prefix
+                arrow = msvcrt.getch()
+                x, y = avatar_location
+                new_x, new_y = x, y
+                if arrow == b'M':     # Right arrow
+                    new_y = y + 1
+                elif arrow == b'K':   # Left arrow
+                    new_y = y - 1
+                elif arrow == b'H':   # Up arrow
+                    new_x = x - 1
+                elif arrow == b'P':   # Down arrow
+                    new_x = x + 1
+                # Check for wall and boundaries
+                if (0 <= new_x < height and 0 <= new_y < width):
+                    next_cell = map_grid[new_x][new_y]
+                    if next_cell == "E":
+                        avatar_location = (new_x, new_y)
+                        return
+                    elif next_cell == "↑":
+                        # Move to next map in batch (cycle if at end)
+                        current_map_index = (current_map_index + 1) % len(map_batch1)
+                        map_grid = map_batch1[current_map_index]
+                        break  # Break inner loop to restart with new map
+                    elif next_cell == "↓":
+                        # Move to previous map in batch (cycle if at start)
+                        current_map_index = (current_map_index - 1) % len(map_batch1)
+                        map_grid = map_batch1[current_map_index]
+                        break  # Break inner loop to restart with new map
+                    elif next_cell != "#":
+                        avatar_location = (new_x, new_y)
+                        # Random encounter: 5% chance
+                        if random.random() < 0.05:
+                            battle_seq(hero)
+        # Outer loop continues with new map
 
     return
