@@ -36,10 +36,8 @@ def battle_seq(hero):
     # Set Sounds *** 0-MISS 1-HIT 2-KILL 3-CRIT 4-NONE
     hitmiss = 4
     hitmiss_e = 4
-    # l.play_music("asset/music/11.mp3",.5)
 
     # Battle Loop
-
     while True:
 
         clear_screen()
@@ -1255,16 +1253,23 @@ def grid_mover(hero):
                     if (row_idx, col_idx) == avatar_location:
                         line += "[green]@[/green] "
                     else:
-                        line += cell + " "
+                        if cell == "E":
+                            line += "[red]"+ cell + "[/red] "
+                        elif cell == "↑":
+                            line += "[yellow]"+ cell + "[/yellow] "
+                        elif cell == "↓":
+                            line += "[blue]"+ cell + "[/blue] "
+                        else:
+                            line += cell + " "
                         
                 console.print(line)
 
             console.print("\n                    ", level_text, floor_text, current_map_index + 1)
-            console.print("[yellow]LEGEND ------------------------------")
-            console.print("[yellow]|[/yellow] [red]E[/red]: Entrance     [green]@[/green]: Hero           [yellow]|")
-            console.print("[yellow]|[/yellow] [blue]↓[/blue]: Down Floor   [purple]↑[/purple]: Up Floor       [yellow]|")
-            console.print("[yellow]-------------------------------------")
-            console.print("Move with Arrow Keys (← ↑ → ↓)")
+            console.print("[orange]LEGEND ------------------------------")
+            console.print("[orange]|[/orange] [red]E[/red]: Gate Entrance    [green]@[/green]: Hero       [orange]|")
+            console.print("[orange]|[/orange] [blue]↓[/blue]: Down Floor       [yellow]↑[/yellow]: Up Floor   [orange]|")
+            console.print("[orange]-------------------------------------")
+            console.print("[green]Move with Arrow Keys (← ↑ → ↓)[/green]")
             key = msvcrt.getch()
             if key == b'i':
                 inventory(hero)
@@ -1301,9 +1306,11 @@ def grid_mover(hero):
                         break  # Break inner loop to restart with new map
                     elif next_cell != "#":
                         avatar_location = (new_x, new_y)
-                        # Random encounter: 5% chance
-                        # if random.random() < 0.05:
-                        #     battle_seq(hero)
+                    
+                    # # Random encounter: 5% chance
+                    # if random.random() < 0.05:
+                    #     battle_seq(hero)
+                    
         # Outer loop continues with new map
 
     return
