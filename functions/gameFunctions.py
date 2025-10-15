@@ -1175,7 +1175,7 @@ def grid_mover(hero):
     
     first_visit = True
     
-    map_batch1 = [map_grid1, map_grid2, map_grid3]
+    map_batch1 = [map_grid1, map_grid2, map_grid3, map_grid4]
     
     # Start with the first map in the batch
     current_map_index = 0
