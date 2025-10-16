@@ -490,8 +490,8 @@ def hero_status_bar(hero):
     for i in range(60):
         console.print ("-", end="")
     console.print("\n[green]"+hero[0].name)
-    console.print("[white]Level: " + str(hero[0].level) + "        HP: "+ str(hero[0].hp) + "/" + str(hero[0].hp_max) + "     Exp: " + str(hero[0].exp))
-    console.print("Armor: " + hero[1].name + "    Weapon: " + hero[2].name + "   Gold: " + str(hero[0].gold))
+    console.print("[white]Level: " + str.ljust(str(hero[0].level),9) + "HP: "+ str.ljust(str(hero[0].hp) + " / " + str(hero[0].hp_max),13) + "Exp: " + str(hero[0].exp))
+    console.print("Armor: " + str.ljust(hero[1].name,9) + "Weapon: " + str.ljust(hero[2].name,9) + "Gold: " + str(hero[0].gold))
     for i in range(60):
         console.print ("-", end="")
     console.print("\n")
@@ -613,12 +613,12 @@ def inventory(hero):
   
 def checklevelup(hero):
 	 
-    if hero[0].exp >= 300 and hero[0].exp < 900:
+    if hero[0].exp >= 300 and hero[0].exp < 900 and hero[0].level < 2:
         hero[0].level = 2
         hero[0].mod = 4
         hero[0].hp = 150
         hero[0].hp_max = 150
-    if hero[0].exp >= 900 and hero[0].exp < 2700:
+    if hero[0].exp >= 900 and hero[0].exp < 2700 and hero[0].level < 3:
         hero[0].level = 3
         hero[0].mod = 6
     if hero[0].exp >= 2700 and hero[0].exp < 6500:
@@ -1331,8 +1331,9 @@ def grid_mover(hero):
             console.print("[orange]|[/orange] [red]E[/red]: Gate Entrance    [green]@[/green]: Hero       [orange]|")
             console.print("[orange]|[/orange] [blue]↓[/blue]: Down Floor       [yellow]↑[/yellow]: Up Floor   [orange]|")
             console.print("[orange]-------------------------------------")
+            hero_status_bar(hero)
             console.print("[green]Move with Arrow Keys (← ↑ → ↓)[/green]")
-            
+
             skip_other_rand = False # Set Skip Random to False (Reset)
             
             key = msvcrt.getch()
@@ -1375,17 +1376,16 @@ def grid_mover(hero):
                     # Random encounter: 5% chance
                     if random.random() < 0.05:
                         battle_seq(hero)
+                        skip_other_rand = True 
                         if hero[0].hp == 0:
                             player_death(hero)
-                            skip_other_rand = True    
                             return
                         
-                    # Random gold find: 5% chance    
-                    if random.random() < 0.05 and skip_other_rand == False:
+                    # Random gold find: 2% chance    
+                    if random.random() < 0.02 and skip_other_rand == False:
                         random_find(hero)
                         skip_other_rand = True 
                         
-    return
 
 def player_death(hero):
     
@@ -1418,23 +1418,51 @@ def random_find(hero):
     custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
     console = Console(theme=custom_theme, highlight=None)
     
-    temprand = random.randrange(hero[0].level, (hero[0].level + 5 ))
-    random_gold_amount = temprand * random.randrange(2,5)
+    random_type = random.randrange(2)
     
-    clear_screen()
-    filetitle = 'asset/art/chest.dat'
-    data = ''    
-    print(f"{ColorStyle.YELLOW}"+loadart(filetitle, data)+f"{ColorStyle.RESET}")
+    if random_type == 0: ## GOLD 
+        
+        temprand = random.randrange(hero[0].level, (hero[0].level + 5 ))
+        random_gold_amount = temprand * random.randrange(2,5)
+        
+        clear_screen()
+        filetitle = 'asset/art/chest.dat'
+        data = ''    
+        print(f"{ColorStyle.YELLOW}"+loadart(filetitle, data)+f"{ColorStyle.RESET}")
+        
+        console.print("\nYou have found " + str(random_gold_amount) + " gold!")
+        console.print("\nPress Enter to Continue...")
+        
+        hero[0].gold += random_gold_amount
+        chars = {'\r'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                sys.stdin.flush()
+                break
     
-    console.print("\nYou have found " + str(random_gold_amount) + " gold!")
-    console.print("\nPress Enter to Continue...")
+    if random_type == 1: ## HEALTH POTION
     
-    hero[0].gold += random_gold_amount
-    chars = {'\r'}
-    while True:  
-        ans = choice_getch()
-        if ans in chars:
-            sys.stdin.flush()
-            break
+        temprand = random.randrange(hero[0].level, (hero[0].level + 5 ))
+        random_health_amount = temprand * random.randrange(2,5)
+        
+        clear_screen()
+        filetitle = 'asset/art/potion.dat'
+        data = ''    
+        print(f"{ColorStyle.YELLOW}"+loadart(filetitle, data)+f"{ColorStyle.RESET}")
+        
+        console.print("\nYou found a potion. You gain " + str(random_health_amount) + " life!")
+        console.print("\nPress Enter to Continue...")
+        
+        hero[0].hp += random_health_amount
+        if hero[0].hp > hero[0].hp_max:
+            hero[0].hp = hero[0].hp_max
+        chars = {'\r'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                sys.stdin.flush()
+                break
+    
     
     return hero

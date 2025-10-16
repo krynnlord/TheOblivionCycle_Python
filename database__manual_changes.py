@@ -16,6 +16,6 @@ cur = con.cursor()
 
 
 # # Update Value
-result=cur.execute("update hero set exp = 295")
+result=cur.execute("update hero set hp = 110")
 con.commit()
 con.close()
