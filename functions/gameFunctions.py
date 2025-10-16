@@ -15,7 +15,7 @@ def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
 def battle_seq(hero):
-    import random, cursor
+    import random, cursor, sys
     from rich.console import Console, Theme
     from rich.table import Table
     from functions.classes import monster
@@ -39,7 +39,7 @@ def battle_seq(hero):
 
     # Battle Loop
     while True:
-
+        sys.stdin.flush()
         clear_screen()
 
         # Hero Display
@@ -123,10 +123,14 @@ def battle_seq(hero):
         if endcombat == True:
             #console.print('\n')
             console.print("ACTIONS", style="bold underline")        
-            console.print("Press any key to Exit Combat")       
+            console.print("Press Enter to Exit Combat")       
             cursor.hide()
-            choice_getch()
-            
+            chars = {'\r'}
+            while True:  
+                ans = choice_getch()
+                if ans in chars:
+                    sys.stdin.flush()
+                    break
             if enemy_current.hp == 0:
                 hero = combat_rewards(hero)
             
@@ -142,7 +146,11 @@ def battle_seq(hero):
 
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2', '3', '4', 'i','I'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
         
         if ans == '1':
 
@@ -240,7 +248,11 @@ def adventuremenu():
         console.print("([red]7[/red]) Back to Main Menu")
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2', '3', '4','5','6','s','S','i','I','7'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
 
         # Run Choices
         if ans == '1':
@@ -288,7 +300,11 @@ def blacksmith(hero):
         console.print("([red]3[/red]) Back")
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2', '3'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
 
         # Run Choices
         if ans == '3':
@@ -317,7 +333,11 @@ def castle(hero):
         console.print("([red]2[/red]) Back")
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
 
         # Run Choices
         if ans == '1':
@@ -359,7 +379,11 @@ def createhero():
     cursor.show()
     
     cursor.hide()
-    ans = choice_getch()
+    chars = {'y', 'Y', 'n', 'N'}
+    while True:  
+        ans = choice_getch()
+        if ans in chars:
+            break
     
     if ans == 'y' or ans == 'Y':
         con = sqlite3.connect('data.db')
@@ -451,7 +475,9 @@ def gameinfo():
     console.print('\n[yellow]Press any key to return...[/yellow]')
     
     cursor.hide()
+   
     choice_getch()
+
 
 def hero_status_bar(hero):
     
@@ -493,7 +519,11 @@ def inn(hero):
         console.print("([red]3[/red]) Back")
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2', '3'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
 
         # Run Choices
         if ans == '3':
@@ -576,7 +606,9 @@ def inventory(hero):
     table.add_row("Gold",str(hero[0].gold))
     console.print(table)
     cursor.hide()
+    
     choice_getch()
+
   
 def checklevelup(level, prof, exp):
 	 
@@ -669,7 +701,11 @@ def music():
         console.print("\n[yellow]0[/yellow]) Back")
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2', '3', '4','5','6','7','0'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
 
         con = sqlite3.connect('data.db')
         cur = con.cursor()
@@ -795,7 +831,11 @@ def gameoptions():
         console.print("([red]5[/red]) Return")
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2', '3', '4','5'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
 
         # Run Choices
         if ans == '1': # Toggle Intro Logic
@@ -873,7 +913,11 @@ def provisioner(hero):
         console.print("([red]3[/red]) Back")
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2', '3'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
 
         # Run Choices
         if ans == '3':
@@ -902,7 +946,9 @@ def display_score(hero):
             console.print("Poisoned")
 
         cursor.hide()
+
         choice_getch()
+
         break
     
 def spellbook():
@@ -946,6 +992,7 @@ def spellbook():
     console.print(table)
 
     cursor.hide()
+    
     choice_getch()
     
 def spellcast(hero_spells):
@@ -995,7 +1042,11 @@ def stones(hero):
         console.print("([red]2[/red]) Back")
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
 
         # Run Choices
         if ans == '1':
@@ -1028,7 +1079,11 @@ def temple(hero):
         console.print("([red]3[/red]) Back")
 
         cursor.hide()
-        ans = choice_getch()
+        chars = {'1', '2', '3'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
 
         # Run Choices
         if ans == '3':
@@ -1069,24 +1124,26 @@ def enemy_generator(hero_level):
     return enemy_current
 
 def choice_getch():
-    import sys
-    if sys.platform.startswith('win'):
-        try:
-            import msvcrt
-            return msvcrt.getch().decode('utf-8')
-        except:
-            return
-    else:
-        import tty
-        import termios
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(fd)
-            ch = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
+    while True:
+    
+        import sys
+        if sys.platform.startswith('win'):
+            try:
+                import msvcrt
+                return msvcrt.getch().decode('utf-8')
+            except:
+                return
+        else:
+            import tty
+            import termios
+            fd = sys.stdin.fileno()
+            old_settings = termios.tcgetattr(fd)
+            try:
+                tty.setraw(fd)
+                ch = sys.stdin.read(1)
+            finally:
+                termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+                return ch
 
 def save_game(hero):
     import sqlite3
@@ -1272,6 +1329,7 @@ def grid_mover(hero):
             console.print("[orange]|[/orange] [blue]↓[/blue]: Down Floor       [yellow]↑[/yellow]: Up Floor   [orange]|")
             console.print("[orange]-------------------------------------")
             console.print("[green]Move with Arrow Keys (← ↑ → ↓)[/green]")
+            
             key = msvcrt.getch()
             if key == b'i':
                 inventory(hero)

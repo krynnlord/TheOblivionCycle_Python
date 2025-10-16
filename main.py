@@ -45,8 +45,12 @@ def main():
         console.print("([red]4[/red]) Quit Game")
         
         cursor.hide()
-        ans = choice_getch()
-
+        chars = {'1', '2', '3', '4'}
+        while True:  
+            ans = choice_getch()
+            if ans in chars:
+                break
+            
         # Run Choices
         if ans == '2':
             createhero()
