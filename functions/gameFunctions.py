@@ -1233,11 +1233,11 @@ def grid_mover(hero):
     custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
     console = Console(theme=custom_theme, highlight=None)
     
-    width, height = 12, 12
+    width, height = 40, 20
     
     first_visit = True
     
-    map_batch1 = [map_grid1, map_grid2, map_grid3, map_grid4]
+    map_batch1 = [map_grid1, map_grid9]
     
     # Start with the first map in the batch
     current_map_index = 0
@@ -1320,17 +1320,19 @@ def grid_mover(hero):
                         elif cell == "↑":
                             line += "[yellow]"+ cell + "[/yellow] "
                         elif cell == "↓":
+                            line += "[magenta1]"+ cell + "[/magenta1] "
+                        elif cell == "~":
                             line += "[blue]"+ cell + "[/blue] "
                         else:
                             line += cell + " "
                         
                 console.print(line)
-
-            console.print("\n                    ", level_text, floor_text, current_map_index + 1)
-            console.print("[orange]LEGEND ------------------------------")
-            console.print("[orange]|[/orange] [red]E[/red]: Gate Entrance    [green]@[/green]: Hero       [orange]|")
-            console.print("[orange]|[/orange] [blue]↓[/blue]: Down Floor       [yellow]↑[/yellow]: Up Floor   [orange]|")
-            console.print("[orange]-------------------------------------")
+            console.print("")
+            console.print(level_text, floor_text, "|", current_map_index + 1)
+            console.print("[yellow]LEGEND[/yellow] -----------------------------------------")
+            console.print("| [red]E[/red]: Gate Entrance    [green]@[/green]: Hero        [blue]~[/blue]: Water  |")
+            console.print("| [magenta1]↓[/magenta1]: Down Floor       [yellow]↑[/yellow]: Up Floor    #: Wall   |")
+            console.print("------------------------------------------------")
             hero_status_bar(hero)
             console.print("[green]Move with Arrow Keys (← ↑ → ↓)[/green]")
 
@@ -1370,21 +1372,21 @@ def grid_mover(hero):
                         map_grid = map_batch1[current_map_index]
                         last_move = "down"
                         break  # Break inner loop to restart with new map
-                    elif next_cell != "#":
+                    elif next_cell not in ("~", "#"):
                         avatar_location = (new_x, new_y)
                     
-                    # Random encounter: 5% chance
-                    if random.random() < 0.05:
-                        battle_seq(hero)
-                        skip_other_rand = True 
-                        if hero[0].hp == 0:
-                            player_death(hero)
-                            return
+                    # # Random encounter: 5% chance
+                    # if random.random() < 0.05:
+                    #     battle_seq(hero)
+                    #     skip_other_rand = True 
+                    #     if hero[0].hp == 0:
+                    #         player_death(hero)
+                    #         return
                         
-                    # Random gold find: 2% chance    
-                    if random.random() < 0.02 and skip_other_rand == False:
-                        random_find(hero)
-                        skip_other_rand = True 
+                    # # Random gold find: 2% chance    
+                    # if random.random() < 0.02 and skip_other_rand == False:
+                    #     random_find(hero)
+                    #     skip_other_rand = True 
                         
 
 def player_death(hero):
