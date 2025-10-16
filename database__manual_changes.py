@@ -16,6 +16,6 @@ cur = con.cursor()
 
 
 # # Update Value
-#result=cur.execute("update inventory set id = 8 where name = 'Dagger'")
-#con.commit()
-#con.close()
+result=cur.execute("update hero set exp = 295")
+con.commit()
+con.close()

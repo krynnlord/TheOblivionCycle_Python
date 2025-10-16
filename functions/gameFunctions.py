@@ -390,7 +390,7 @@ def createhero():
         cur = con.cursor()
 
         # Write to DB - HERO
-        cur.execute("update hero set name='" + shortname + "',hp=100,hp_max=100,luck=5,DEF_m=0,DEF_s=0,DEF_b=0,level=1,mod=0,exp=0,stat=1,gold=0")
+        cur.execute("update hero set name='" + shortname + "',hp=100,hp_max=100,luck=5,DEF_m=0,DEF_s=0,DEF_b=0,level=1,mod=1,exp=0,stat=1,gold=0")
         con.commit()
         con.close()
         print('\nNew game created....')
@@ -487,11 +487,12 @@ def hero_status_bar(hero):
     custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
     console = Console(theme=custom_theme, highlight=None)
     
-    for i in range(90):
+    for i in range(60):
         console.print ("-", end="")
-    console.print("\n[green]"+hero[0].name + "[white]   Level: " + str(hero[0].level) + "   Exp: " + str(hero[0].exp)+"   Gold: " + str(hero[0].gold) +"[/white]")
-    console.print("HP: "+ str(hero[0].hp) + " / " + str(hero[0].hp_max) + "    Armor: " + hero[1].name + "    Weapon: " + hero[2].name)
-    for i in range(90):
+    console.print("\n[green]"+hero[0].name)
+    console.print("[white]Level: " + str(hero[0].level) + "        HP: "+ str(hero[0].hp) + "/" + str(hero[0].hp_max) + "     Exp: " + str(hero[0].exp))
+    console.print("Armor: " + hero[1].name + "    Weapon: " + hero[2].name + "   Gold: " + str(hero[0].gold))
+    for i in range(60):
         console.print ("-", end="")
     console.print("\n")
     
@@ -610,67 +611,69 @@ def inventory(hero):
     choice_getch()
 
   
-def checklevelup(level, prof, exp):
+def checklevelup(hero):
 	 
-    if exp >= 300 and exp < 900:
-        level = 2
-        prof = 4
-    if exp >= 900 and exp < 2700:
-        level = 3
-        prof = 6
-    if exp >= 2700 and exp < 6500:
-        level = 4
-        prof = 8
-    if exp >= 6500 and exp < 14000:
-        level = 5
-        prof = 11
-    if exp >= 14000 and exp < 23000:
-        level = 6
-        prof = 14
-    if exp >= 23000 and exp < 34000:
-        level = 7
-        prof = 17
-    if exp >= 34000 and exp < 48000:
-        level = 8
-        prof = 20
-    if exp >= 48000 and exp < 64000:
-        level = 9
-        prof = 24
-    if exp >= 64000 and exp < 85000:
-        level = 10
-        prof = 28
-    if exp >= 85000 and exp < 100000:
-        level = 11
-        prof = 32
-    if exp >= 100000 and exp < 120000:
-        level = 12
-        prof = 36
-    if exp >= 120000 and exp < 140000:
-        level = 13
-        prof = 41    
-    if exp >= 140000 and exp < 165000:
-        level = 14
-        prof = 46
-    if exp >= 165000 and exp < 195000:
-        level = 15
-        prof = 51
-    if exp >= 195000 and exp < 225000:
-        level = 16
-        prof = 56
-    if exp >= 225000 and exp < 265000:
-        level = 17
-        prof = 62
-    if exp >= 265000 and exp < 305000:
-        level = 18
-        prof = 68
-    if exp >= 305000 and exp < 355000:
-        level = 19
-        prof = 74
-    if exp > 355000:
-        level = 20
-        prof = 80
+    if hero[0].exp >= 300 and hero[0].exp < 900:
+        hero[0].level = 2
+        hero[0].mod = 4
+        hero[0].hp = 150
+        hero[0].hp_max = 150
+    if hero[0].exp >= 900 and hero[0].exp < 2700:
+        hero[0].level = 3
+        hero[0].mod = 6
+    if hero[0].exp >= 2700 and hero[0].exp < 6500:
+        hero[0].level = 4
+        hero[0].mod = 8
+    if hero[0].exp >= 6500 and hero[0].exp < 14000:
+        hero[0].level = 5
+        hero[0].mod = 11
+    if hero[0].exp >= 14000 and hero[0].exp < 23000:
+        hero[0].level = 6
+        hero[0].mod = 14
+    if hero[0].exp >= 23000 and hero[0].exp < 34000:
+        hero[0].level = 7
+        hero[0].mod = 17
+    if hero[0].exp >= 34000 and hero[0].exp < 48000:
+        hero[0].level = 8
+        hero[0].mod = 20
+    if hero[0].exp >= 48000 and hero[0].exp < 64000:
+        hero[0].level = 9
+        hero[0].mod = 24
+    if hero[0].exp >= 64000 and hero[0].exp < 85000:
+        hero[0].level = 10
+        hero[0].mod = 28
+    if hero[0].exp >= 85000 and hero[0].exp < 100000:
+        hero[0].level = 11
+        hero[0].mod = 32
+    if hero[0].exp >= 100000 and hero[0].exp < 120000:
+        hero[0].level = 12
+        hero[0].mod = 36
+    if hero[0].exp >= 120000 and hero[0].exp < 140000:
+        hero[0].level = 13
+        hero[0].mod = 41    
+    if hero[0].exp >= 140000 and hero[0].exp < 165000:
+        hero[0].level = 14
+        hero[0].mod = 46
+    if hero[0].exp >= 165000 and hero[0].exp < 195000:
+        hero[0].level = 15
+        hero[0].mod = 51
+    if hero[0].exp >= 195000 and hero[0].exp < 225000:
+        hero[0].level = 16
+        hero[0].mod = 56
+    if hero[0].exp >= 225000 and hero[0].exp < 265000:
+        hero[0].level = 17
+        hero[0].mod = 62
+    if hero[0].exp >= 265000 and hero[0].exp < 305000:
+        hero[0].level = 18
+        hero[0].mod = 68
+    if hero[0].exp >= 305000 and hero[0].exp < 355000:
+        hero[0].level = 19
+        hero[0].mod = 74
+    if hero[0].exp > 355000:
+        hero[0].level = 20
+        hero[0].mod = 80
             
-    return level, prof
+    return hero
 
 def loadart(filetitle, data):
     with open(filetitle, 'r') as file:
@@ -1330,6 +1333,8 @@ def grid_mover(hero):
             console.print("[orange]-------------------------------------")
             console.print("[green]Move with Arrow Keys (← ↑ → ↓)[/green]")
             
+            skip_other_rand = False # Set Skip Random to False (Reset)
+            
             key = msvcrt.getch()
             if key == b'i':
                 inventory(hero)
@@ -1367,12 +1372,19 @@ def grid_mover(hero):
                     elif next_cell != "#":
                         avatar_location = (new_x, new_y)
                     
-                    # # Random encounter: 5% chance
+                    # Random encounter: 5% chance
                     if random.random() < 0.05:
                         battle_seq(hero)
                         if hero[0].hp == 0:
-                            player_death(hero)    
-                            return 
+                            player_death(hero)
+                            skip_other_rand = True    
+                            return
+                        
+                    # Random gold find: 5% chance    
+                    if random.random() < 0.05 and skip_other_rand == False:
+                        random_find(hero)
+                        skip_other_rand = True 
+                        
     return
 
 def player_death(hero):
@@ -1390,10 +1402,39 @@ def player_death(hero):
 
 def combat_rewards(hero):
     import random
-    
     rand_exp = random.randrange(2,9)
     rand_gold = random.randrange(2,9)
     hero[0].exp += hero[0].level * rand_exp
     hero[0].gold += hero[0].level * rand_gold
+    
+    hero = checklevelup(hero)
+    
+    return hero
+
+def random_find(hero):
+    import random, sys
+    from rich.console import Console, Theme
+    
+    custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
+    console = Console(theme=custom_theme, highlight=None)
+    
+    temprand = random.randrange(hero[0].level, (hero[0].level + 5 ))
+    random_gold_amount = temprand * random.randrange(2,5)
+    
+    clear_screen()
+    filetitle = 'asset/art/chest.dat'
+    data = ''    
+    print(f"{ColorStyle.YELLOW}"+loadart(filetitle, data)+f"{ColorStyle.RESET}")
+    
+    console.print("\nYou have found " + str(random_gold_amount) + " gold!")
+    console.print("\nPress Enter to Continue...")
+    
+    hero[0].gold += random_gold_amount
+    chars = {'\r'}
+    while True:  
+        ans = choice_getch()
+        if ans in chars:
+            sys.stdin.flush()
+            break
     
     return hero
