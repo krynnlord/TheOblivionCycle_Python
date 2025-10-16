@@ -834,7 +834,7 @@ def gameoptions():
         console.print("([red]5[/red]) Return")
 
         cursor.hide()
-        chars = {'1', '2', '3', '4','5'}
+        chars = {'1', '2', '3', '4','5','-','+','='}
         while True:  
             ans = choice_getch()
             if ans in chars:
@@ -1313,26 +1313,27 @@ def grid_mover(hero):
                 line = ""
                 for col_idx, cell in enumerate(row):                    
                     if (row_idx, col_idx) == avatar_location:
-                        line += "[green]@[/green] "
+                        line += ":mage:"
                     else:
                         if cell == "E":
-                            line += "[red]"+ cell + "[/red] "
+                            line += ":hot_springs: "
                         elif cell == "↑":
-                            line += "[yellow]"+ cell + "[/yellow] "
+                            line += ":red_triangle_pointed_up:"
                         elif cell == "↓":
-                            line += "[magenta1]"+ cell + "[/magenta1] "
+                            line += ":red_triangle_pointed_down:"
                         elif cell == "~":
-                            line += "[blue]"+ cell + "[/blue] "
+                            line += ":blue_square:"
+                        elif cell == "#":
+                            line += ":brown_square:"
                         else:
                             line += cell + " "
                         
                 console.print(line)
+            console.print(level_text, floor_text, current_map_index + 1)
             console.print("")
-            console.print(level_text, floor_text, "|", current_map_index + 1)
-            console.print("[yellow]LEGEND[/yellow] -----------------------------------------")
-            console.print("| [red]E[/red]: Gate Entrance    [green]@[/green]: Hero        [blue]~[/blue]: Water  |")
-            console.print("| [magenta1]↓[/magenta1]: Down Floor       [yellow]↑[/yellow]: Up Floor    #: Wall   |")
-            console.print("------------------------------------------------")
+            console.print("[yellow]LEGEND[/yellow] -----------------------------------------------------")
+            console.print(" :hot_springs: : Portal       :mage:: Hero        :blue_square:: Water")
+            console.print(" :red_triangle_pointed_down:: Down Floor   :red_triangle_pointed_up:: Up Floor    :brown_square:: Wall")
             hero_status_bar(hero)
             console.print("[green]Move with Arrow Keys (← ↑ → ↓)[/green]")
 
@@ -1375,18 +1376,18 @@ def grid_mover(hero):
                     elif next_cell not in ("~", "#"):
                         avatar_location = (new_x, new_y)
                     
-                    # # Random encounter: 5% chance
-                    # if random.random() < 0.05:
-                    #     battle_seq(hero)
-                    #     skip_other_rand = True 
-                    #     if hero[0].hp == 0:
-                    #         player_death(hero)
-                    #         return
+                    # Random encounter: 5% chance
+                    if random.random() < 0.05:
+                        battle_seq(hero)
+                        skip_other_rand = True 
+                        if hero[0].hp == 0:
+                            player_death(hero)
+                            return
                         
-                    # # Random gold find: 2% chance    
-                    # if random.random() < 0.02 and skip_other_rand == False:
-                    #     random_find(hero)
-                    #     skip_other_rand = True 
+                    # Random gold find: 2% chance    
+                    if random.random() < 0.02 and skip_other_rand == False:
+                        random_find(hero)
+                        skip_other_rand = True 
                         
 
 def player_death(hero):
