@@ -340,7 +340,7 @@ def battle_seq(hero,maplevel):
                     hitmiss = 0
             # Enemy Turn
             #print(enemy_current['name']+' attacks you.')
-            atk_value = random.randrange(0,15)
+            atk_value = (hero[0].level * random.randrange (1,5)) * enemy_current.mod 
             hero[0].hp -= atk_value
             if endcombat == True:
                 atk_value = 0
@@ -1249,7 +1249,8 @@ def enemy_generator(hero,maplevel):
     
     enemy_current = monster('',0,0,0,0,0,0,0,0,0,0)
     
-    enemy_list1 = ['Goblin','Hobgoblin','Orc','Orc Warrior','Orc Shaman','Skeleton','Zombie','Ghoul','Wraith','Bandit','Bandit Leader','Wolf','Dire Wolf','Spider','Giant Spider','Slime','Ogre','Troll','Giant','Dark Knight']
+    enemy_list1 = ['Goblin','Hobgoblin','Orc','Orc Warrior','Orc Shaman','Skeleton','Zombie','Ghoul','Wraith','Bandit','Bandit Leader','Wolf',
+                   'Dire Wolf','Spider','Giant Spider','Slime','Ogre','Troll','Giant','Dark Knight']
     
     enemy_list2 = ['Lizardman','Lizard Warrior','Lizard Shaman','Giant Lizardman','Giant Lizard Warrior','Giant Lizard Shaman',
                    'Kobold','Kobold Warrior','Kobold Shaman','Giant Kobold Warrior','Giant Kobold Shaman',
@@ -1260,16 +1261,19 @@ def enemy_generator(hero,maplevel):
     
     if maplevel == 1:
         enemy_current.name = random.choice(enemy_list1)
+        enemy_diff_factor = 1
     if maplevel == 2:
         enemy_current.name = random.choice(enemy_list2)
+        enemy_diff_factor = 2
     if maplevel == 3:
         enemy_current.name = random.choice(enemy_list3)
+        enemy_diff_factor = 3
         
     enemy_current.level = hero[0].level + random.randint(1,3)
     enemy_current.hp = random.randint(1,(hero[0].level+5)) * enemy_current.level
     enemy_current.hp_max = enemy_current.hp
     enemy_current.luck = random.randint(0,3)
-    enemy_current.mod = random.randint(1,4)
+    enemy_current.mod = random.randint(1,4) * enemy_diff_factor
     enemy_current.ac = random.randint(5,15)
     enemy_current.stat = 1  # 1=Normal 0=Dead 2
     enemy_current.DEF_b = 1
