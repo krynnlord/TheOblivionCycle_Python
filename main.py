@@ -12,13 +12,11 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 con = sqlite3.connect('data.db')
 cur = con.cursor()
 result_music = cur.execute("select value from options where id = 1").fetchone() # 0 music is Off 1 is on
-result_musictrack = cur.execute("select value from options where id = 3").fetchone() # music choice
 result_title = cur.execute("select value from options where id = 2").fetchone() # 0 is show title 1 is skip
 
 
 if result_music[0] == 1: # Check for Music
-    music_selected = f'{result_musictrack[0]:02d}' # Convert to 2 digits if 1
-    musictrack = 'asset/music/'+str(music_selected)+'.mp3'
+    musictrack = 'asset/music/01.mp3'
     play_music(musictrack)
     
 if result_title[0] == 1: # Check for Intro

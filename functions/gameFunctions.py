@@ -11,10 +11,12 @@ GameDescInfo = {
 }
 
 def adventuremenu():
-    import os, msvcrt, random
+    import os, msvcrt, sqlite3
     from rich.console import Console, Theme    
   
     hero = load_game()
+        
+    adventure_music = True
     
     custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
     console = Console(theme=custom_theme, highlight=None)
@@ -27,6 +29,7 @@ def adventuremenu():
 
     while True:
         # Set avatar_location based on last move
+                
         if last_move == "down":
             # Prefer "↑" as starting location when coming from below
             up_found = False
@@ -82,6 +85,16 @@ def adventuremenu():
                 break
                     
         while True:
+            
+            if adventure_music == False:
+                con = sqlite3.connect('data.db')
+                cur = con.cursor()
+                result_music = cur.execute("select value from options where id = 1").fetchone() # 0 music is Off 1 is on
+                if result_music[0] == 1: # Check for Music  
+                    musictrack = 'asset/music/01.mp3'
+                    play_music(musictrack)
+                    adventure_music = True
+                
             os.system('cls')
             # Print the map with avatar
             for row_idx, row in enumerate(map_grid):
@@ -133,16 +146,22 @@ def adventuremenu():
                     next_cell = map_grid[new_x][new_y]
                     if next_cell == "1":
                         inn(hero)
+                        adventure_music = False
                     elif next_cell == "2":
                         blacksmith(hero)
+                        adventure_music = False
                     elif next_cell == "3":
                         provisioner(hero)
+                        adventure_music = False
                     elif next_cell == "4":
                         temple(hero)
+                        adventure_music = False
                     elif next_cell == "5":
                         castle(hero)
+                        adventure_music = False
                     elif next_cell == "&":
                         stones(hero)
+                        adventure_music = False
                     elif next_cell not in ("[", "#"):
                         avatar_location = (new_x, new_y)
                     
@@ -356,9 +375,17 @@ def battle_seq(hero,maplevel):
             enemy_combat_string = 'Waits'
             
 def blacksmith(hero):
-    import cursor
+    import cursor,sqlite3
     from rich.console import Console, Theme 
     from functions.variables import ColorStyle
+    
+                # Check if Music is enabled and play
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    result_music = cur.execute("select value from options where id = 1").fetchone() # 0 music is Off 1 is on
+    if result_music[0] == 1: # Check for Music
+        musictrack = 'asset/music/03.mp3'
+        play_music(musictrack)
     
     while True:
         clear_screen()
@@ -391,9 +418,17 @@ def blacksmith(hero):
             break
          
 def castle(hero):
-    import cursor
+    import cursor,sqlite3
     from rich.console import Console, Theme
     
+                # Check if Music is enabled and play
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    result_music = cur.execute("select value from options where id = 1").fetchone() # 0 music is Off 1 is on
+    if result_music[0] == 1: # Check for Music
+        musictrack = 'asset/music/07.mp3'
+        play_music(musictrack)
+        
     while True:
         clear_screen()
         ans = ''
@@ -577,8 +612,16 @@ def hero_status_bar(hero):
     console.print("\n")
     
 def inn(hero):
-    import cursor
+    import cursor,sqlite3
     from rich.console import Console, Theme
+    
+            # Check if Music is enabled and play
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    result_music = cur.execute("select value from options where id = 1").fetchone() # 0 music is Off 1 is on
+    if result_music[0] == 1: # Check for Music
+        musictrack = 'asset/music/02.mp3'
+        play_music(musictrack)
     
     while True:
         clear_screen()
@@ -790,40 +833,22 @@ def music():
             if ans in chars:
                 break
 
-        con = sqlite3.connect('data.db')
-        cur = con.cursor()
-
-
         if ans == '1':
             play_music("asset/music/01.mp3")
-            cur.execute("update options set value = 1 where id = 3")
-            con.commit()
         if ans == '2':
             play_music("asset/music/02.mp3")
-            cur.execute("update options set value = 2 where id = 3")
-            con.commit()
         if ans == '3':
             play_music("asset/music/03.mp3")
-            cur.execute("update options set value = 3 where id = 3")
-            con.commit()
         if ans == '4':
             play_music("asset/music/04.mp3")
-            cur.execute("update options set value = 4 where id = 3")
-            con.commit()
         if ans == '5':
-            play_music("asset/music/05.mp3")
-            cur.execute("update options set value = 5 where id = 3")
-            con.commit()            
+            play_music("asset/music/05.mp3")         
         if ans == '6':
             play_music("asset/music/06.mp3")
-            cur.execute("update options set value = 6 where id = 3")
-            con.commit()
         if ans == '7':
-            play_music("asset/music/07.mp3")
-            cur.execute("update options set value = 7 where id = 3")
-            con.commit()
-        
+            play_music("asset/music/07.mp3")        
         if ans == '0':
+            music_toggle()
             return
         
 def play_music(mp3File,vol=.1):
@@ -938,9 +963,7 @@ def gameoptions():
             else:
                 cur.execute("update options set value = 1 where id = 1")
                 con.commit()
-                result_musictrack = cur.execute("select value from options where id = 3").fetchone()
-                music_selected = f'{result_musictrack[0]:02d}' # Convert to 2 digits if 1
-                musictrack = 'asset/music/'+str(music_selected)+'.mp3'
+                musictrack = 'asset/music/01.mp3'
                 play_music(musictrack)            
         
         elif ans == '3':
@@ -948,7 +971,13 @@ def gameoptions():
         
         elif ans == '4':
             music()
-        
+            con = sqlite3.connect('data.db')
+            cur = con.cursor()
+            result_music = cur.execute("select value from options where id = 1").fetchone() # 0 music is Off 1 is on
+            if result_music[0] == 1: # Check for Music  
+                musictrack = 'asset/music/01.mp3'
+                play_music(musictrack)
+    
         elif ans == '5':
             break
         elif ans == '-':
@@ -973,9 +1002,17 @@ def delay_print2(s):
         time.sleep(0.02)
         
 def provisioner(hero):
-    import cursor
+    import cursor,sqlite3
     from rich.console import Console, Theme
     
+                # Check if Music is enabled and play
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    result_music = cur.execute("select value from options where id = 1").fetchone() # 0 music is Off 1 is on
+    if result_music[0] == 1: # Check for Music
+        musictrack = 'asset/music/03.mp3'
+        play_music(musictrack)
+        
     while True:
         clear_screen()
         ans = ''
@@ -1103,10 +1140,18 @@ def spellcast(hero_spells):
         console.input("That is not a valid spell.")   
         
 def stones(hero):
-    import cursor
+    import cursor,sqlite3
     from rich.console import Console, Theme
     global Boss1_defeated, Boss2_defeated, Boss3_defeated, Boss4_defeated, Boss5_defeated
     
+                    # Check if Music is enabled and play
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    result_music = cur.execute("select value from options where id = 1").fetchone() # 0 music is Off 1 is on
+    if result_music[0] == 1: # Check for Music
+        musictrack = 'asset/music/05.mp3'
+        play_music(musictrack)
+        
     while True:
         clear_screen()
         ans = ''
@@ -1155,8 +1200,18 @@ def stones(hero):
             break
         
 def temple(hero):
-    import cursor
+    import cursor, sqlite3
     from rich.console import Console, Theme
+    
+        # Check if Music is enabled and play
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    result_music = cur.execute("select value from options where id = 1").fetchone() # 0 music is Off 1 is on
+    if result_music[0] == 1: # Check for Music
+        musictrack = 'asset/music/04.mp3'
+        play_music(musictrack)
+    
+
     
     while True:
         clear_screen()
