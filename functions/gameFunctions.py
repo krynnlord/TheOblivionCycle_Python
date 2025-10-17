@@ -10,6 +10,143 @@ GameDescInfo = {
 'Author' : 'Richard Miller'
 }
 
+def adventuremenu():
+    import os, msvcrt, random
+    from rich.console import Console, Theme    
+  
+    hero = load_game()
+    
+    custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
+    console = Console(theme=custom_theme, highlight=None)
+    
+    width, height = 40, 20
+    map_grid = adventure_map
+    level_text = "Town of Abstania"  
+    
+    last_move = None  # Track last move direction
+
+    while True:
+        # Set avatar_location based on last move
+        if last_move == "down":
+            # Prefer "↑" as starting location when coming from below
+            up_found = False
+            for row_idx, row in enumerate(map_grid):
+                for col_idx, cell in enumerate(row):
+                    if cell == "↑":
+                        avatar_location = (row_idx, col_idx)
+                        up_found = True
+                        break
+                if up_found:
+                    break
+            else:
+                # Fallback to "E" if no "↑" found
+                for row_idx, row in enumerate(map_grid):
+                    for col_idx, cell in enumerate(row):
+                        if cell == "E":
+                            avatar_location = (row_idx, col_idx)
+                            break
+                    else:
+                        continue
+                    break
+ 
+        if last_move == "up":
+            # Prefer "↑" as starting location when coming from below
+            down_found = False
+            for row_idx, row in enumerate(map_grid):
+                for col_idx, cell in enumerate(row):
+                    if cell == "↓":
+                        avatar_location = (row_idx, col_idx)
+                        down_found = True
+                        break
+                if down_found:
+                    break
+            else:
+                # Fallback to "E" if no "↑" found
+                for row_idx, row in enumerate(map_grid):
+                    for col_idx, cell in enumerate(row):
+                        if cell == "E":
+                            avatar_location = (row_idx, col_idx)
+                            break
+                    else:
+                        continue
+                    break
+        if last_move == None:
+            # Always start on the first "E" in the map
+            for row_idx, row in enumerate(map_grid):
+                for col_idx, cell in enumerate(row):
+                    if cell == "E":
+                        avatar_location = (row_idx, col_idx)
+                        break
+                else:
+                    continue
+                break
+                    
+        while True:
+            os.system('cls')
+            # Print the map with avatar
+            for row_idx, row in enumerate(map_grid):
+                line = ""
+                for col_idx, cell in enumerate(row):                    
+                    if (row_idx, col_idx) == avatar_location:
+                        line += ":mage:"
+                    else:
+                        if cell == "E":
+                            line += "  "
+                        elif cell == "[":
+                            line += ":brick:"
+                        elif cell in ("1", "2", "3", "4", "5"):
+                            line += ":door:"
+                        elif cell == "&":
+                            line += ":hot_springs: "
+                        elif cell == "#":
+                            line += ":brown_square:"
+                        else:
+                            line += cell + " "
+                        
+                console.print(line)
+            console.print(level_text)
+            console.print("")
+            hero_status_bar(hero)
+            console.print("[green]Move with Arrow Keys (← ↑ → ↓) Escape to quit[/green]")
+            
+            key = msvcrt.getch()
+            if key == b'i':
+                inventory(hero)
+            if key == b'\x1b' : # Quit
+                save_game(hero)
+                return
+            if key == b'\xe0':  # Arrow key prefix
+                arrow = msvcrt.getch()
+                x, y = avatar_location
+                new_x, new_y = x, y
+                if arrow == b'M':     # Right arrow
+                    new_y = y + 1
+                elif arrow == b'K':   # Left arrow
+                    new_y = y - 1
+                elif arrow == b'H':   # Up arrow
+                    new_x = x - 1
+                elif arrow == b'P':   # Down arrow
+                    new_x = x + 1
+    
+                # Check for wall and boundaries
+                if (0 <= new_x < height and 0 <= new_y < width):
+                    next_cell = map_grid[new_x][new_y]
+                    if next_cell == "1":
+                        inn(hero)
+                    elif next_cell == "2":
+                        blacksmith(hero)
+                    elif next_cell == "3":
+                        provisioner(hero)
+                    elif next_cell == "4":
+                        temple(hero)
+                    elif next_cell == "5":
+                        castle(hero)
+                    elif next_cell == "&":
+                        stones(hero)
+                    elif next_cell not in ("[", "#"):
+                        avatar_location = (new_x, new_y)
+                    
+
 def clear_screen():
     import os
     os.system("cls" if os.name == "nt" else "clear")
@@ -218,63 +355,6 @@ def battle_seq(hero):
             hero_combat_string = 'Invalid Move'
             enemy_combat_string = 'Waits'
             
-def adventuremenu():
-    import cursor
-    from rich.console import Console, Theme    
-  
-    hero = load_game()
-    
-    while True:
-        clear_screen()
-        ans = ''
-        filetitle = 'asset/art/village.dat'
-        data = ''
-        custom_theme = Theme({"normal": "white", "green": "green","red": "red", "yellow": "yellow"})
-        console = Console(theme=custom_theme, highlight=None)
-        
-        # Print Artwork
-        console.print("[yellow]"+loadart(filetitle, data)+"[/yellow]\n")
-
-        # Print Hero Information
-        hero_status_bar(hero)
-        
-        # Print Choices
-        console.print("([red]1[/red]) The Circle of Stones")
-        console.print("([red]2[/red]) The Castle")
-        console.print("([red]3[/red]) The Temple")
-        console.print("([red]4[/red]) The Blacksmith")
-        console.print("([red]5[/red]) The Provisioner")
-        console.print("([red]6[/red]) The Inn")
-        console.print("([red]7[/red]) Back to Main Menu")
-
-        cursor.hide()
-        chars = {'1', '2', '3', '4','5','6','s','S','i','I','7'}
-        while True:  
-            ans = choice_getch()
-            if ans in chars:
-                break
-
-        # Run Choices
-        if ans == '1':
-            stones(hero)
-        elif ans == '2':
-            castle(hero)
-        elif ans == '3':
-            temple(hero)
-        elif ans == '4':
-            blacksmith(hero)
-        elif ans == '5':
-            provisioner(hero)          
-        elif ans == '6':
-            inn(hero)
-        elif ans == 's' or ans == 'S':
-            display_score(hero)
-        elif ans == 'i' or ans == 'I':
-            inventory(hero)    
-        elif ans == '7':
-            save_game(hero)
-            break
-    
 def blacksmith(hero):
     import cursor
     from rich.console import Console, Theme 
