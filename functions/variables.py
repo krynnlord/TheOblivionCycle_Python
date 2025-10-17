@@ -1,5 +1,11 @@
 from functions.classes import *
 
+Boss1_defeated = False
+Boss2_defeated = False
+Boss3_defeated = False
+Boss4_defeated = False
+Boss5_defeated = False
+
 #########################################
 # Spells ################################
 #########################################

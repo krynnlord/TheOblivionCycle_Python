@@ -151,7 +151,7 @@ def clear_screen():
     import os
     os.system("cls" if os.name == "nt" else "clear")
 
-def battle_seq(hero):
+def battle_seq(hero,maplevel):
     import random, cursor, sys
     from rich.console import Console, Theme
     from rich.table import Table
@@ -161,7 +161,7 @@ def battle_seq(hero):
     console = Console(theme=custom_theme, highlight=None)
 
     # Define Enemy 
-    enemy_current = enemy_generator(hero[0].level)
+    enemy_current = enemy_generator(hero,maplevel)
 
     # Battle Strings
     hero_combat_string = "Ready for Combat."
@@ -1105,6 +1105,7 @@ def spellcast(hero_spells):
 def stones(hero):
     import cursor
     from rich.console import Console, Theme
+    global Boss1_defeated, Boss2_defeated, Boss3_defeated, Boss4_defeated, Boss5_defeated
     
     while True:
         clear_screen()
@@ -1121,11 +1122,19 @@ def stones(hero):
         hero_status_bar(hero)
 
         # Print Choices
-        console.print("([red]1[/red]) Embark on quest")
-        console.print("([red]2[/red]) Back")
+        console.print("([red]1[/red]) Take portal to the Mines")
+        if Boss1_defeated == True:
+             console.print("([red]2[/red]) Take portal to the Endless Caverns")
+        if Boss2_defeated == True:
+             console.print("([red]3[/red]) Take portal to the The Depths")
+        if Boss3_defeated == True:
+             console.print("([red]4[/red]) Take portal to the Great Chasm")
+        if Boss4_defeated == True:
+             console.print("([red]5[/red]) Take portal to the Spiral Void")
+        console.print("([red]0[/red]) Back")
 
         cursor.hide()
-        chars = {'1', '2'}
+        chars = {'1', '2','3','4','5','0'}
         while True:  
             ans = choice_getch()
             if ans in chars:
@@ -1133,9 +1142,16 @@ def stones(hero):
 
         # Run Choices
         if ans == '1':
-            grid_mover(hero)
-        
-        if ans == '2':
+            grid_mover(hero,1)
+        if ans == '2' and Boss1_defeated == True:
+            grid_mover(hero,2)
+        if ans == '3' and Boss2_defeated == True:
+            grid_mover(hero,3)
+        if ans == '4' and Boss3_defeated == True:
+            grid_mover(hero,4)
+        if ans == '5' and Boss4_defeated == True:
+            grid_mover(hero,5)
+        if ans == '0':
             break
         
 def temple(hero):
@@ -1172,7 +1188,7 @@ def temple(hero):
         if ans == '3':
             break
 
-def enemy_generator(hero_level):
+def enemy_generator(hero,maplevel):
     import random
     from functions.classes import monster
     
@@ -1187,14 +1203,15 @@ def enemy_generator(hero_level):
     
     enemy_list3 = ['Demon','Imp','Succubus','Barghest','Shadow Demon','Vrock','Hezrou','Glabrezu','Nalfeshnee','Balor'] 
     
-    if hero_level >= 5:
-        enemy_list1.extend(enemy_list2)
-    if hero_level >= 10:
-        enemy_list1.extend(enemy_list3)
-  
-    enemy_current.name = random.choice(enemy_list1)
-    enemy_current.level = hero_level + random.randint(1,3)
-    enemy_current.hp = random.randint(1,(hero_level+5)) * enemy_current.level
+    if maplevel == 1:
+        enemy_current.name = random.choice(enemy_list1)
+    if maplevel == 2:
+        enemy_current.name = random.choice(enemy_list2)
+    if maplevel == 3:
+        enemy_current.name = random.choice(enemy_list3)
+        
+    enemy_current.level = hero[0].level + random.randint(1,3)
+    enemy_current.hp = random.randint(1,(hero[0].level+5)) * enemy_current.level
     enemy_current.hp_max = enemy_current.hp
     enemy_current.luck = random.randint(0,3)
     enemy_current.mod = random.randint(1,4)
@@ -1303,7 +1320,7 @@ def load_game():
     
     return hero
 
-def grid_mover(hero):
+def grid_mover(hero,maplevel):
     import os
     import msvcrt
     from rich.console import Console, Theme
@@ -1322,11 +1339,11 @@ def grid_mover(hero):
     # Start with the first map in the batch
     current_map_index = 0
 
-    if hero[0].level >= 1 and hero[0].level <= 10:
+    if maplevel == 1:
         map_grid = map_batch1[current_map_index]
-        level_text = "Level 1"
-        floor_text = "Floor "
-    
+        level_text = "The Mines"
+        
+    floor_text = "- Floor"
     
     last_move = None  # Track last move direction
 
@@ -1458,7 +1475,7 @@ def grid_mover(hero):
                     
                     # Random encounter: 5% chance
                     if random.random() < 0.05:
-                        battle_seq(hero)
+                        battle_seq(hero,maplevel)
                         skip_other_rand = True 
                         if hero[0].hp == 0:
                             player_death(hero)
